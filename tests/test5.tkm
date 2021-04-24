@@ -63,7 +63,7 @@ class Trojkat
 
     public Float pole(){
         Float s = obwod()/2;
-        return (s*(s – sideA)*(s – sideB)*(s – c))**0.5;
+        return (s*(s - sideA)*(s - sideB)*(s - c))**0.5;
 }
 
 
@@ -88,7 +88,7 @@ if(t.pole != pole)
 {
     String komunikat = "Pole trojkata zmienilo sie. Teraz jest rowne ";
     String poleStr = str(t.pole);
-    komunikat = komunikat + poleStr + "\n;
+    komunikat = komunikat + poleStr + "\n";
     print(komunikat);
 }    
 else

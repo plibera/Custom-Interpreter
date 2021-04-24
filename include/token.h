@@ -2,10 +2,12 @@
 
 #include <iostream>
 #include <variant>
+#include <map>
 
 
 enum TokenClass {
     UNKNOWN_TOKEN,
+    EOT_TOKEN,
     KEYWORD_TOKEN,
     OPERATOR_TOKEN,
     IDENTIFIER_TOKEN,
@@ -24,6 +26,8 @@ enum KeywordType {
     T_FLOAT,
     T_BOOL,
     T_STRING,
+    T_TRUE,
+    T_FALSE,
     T_VOID,
     T_CLASS,
     T_PUBLIC,
@@ -32,8 +36,11 @@ enum KeywordType {
     T_SEMICOLON,
     T_LEFTBRACKET,
     T_RIGHTBRACKET,
-    T_EOT
+    T_ACCESS,
+    T_COMMA
 };
+
+extern std::map<std::string, int> keywordMap;
 
 enum OperatorType {
     T_ASSIGN,
@@ -44,6 +51,9 @@ enum OperatorType {
     T_EXP
 };
 
+extern std::map<std::string, int> operatorMap;
+extern std::map<std::string, int> operatorIdMap;
+
 enum IdentifierType {
     T_TYPE,
     T_VAR
@@ -52,7 +62,6 @@ enum IdentifierType {
 enum LiteralType {
     T_INT_LIT,
     T_FLOAT_LIT,
-    T_BOOL_LIT,
     T_STRING_LIT
 };
 
@@ -67,14 +76,21 @@ struct Token
     int lineNumber;
     int linePosition;
 
+    Token(int classType, int type, int pos, int lineNum, int linePos)
+    : classType(classType), type(type), position(pos), lineNumber(lineNum), linePosition(linePos) {}
     virtual ~Token(){}
+
+    virtual std::string toString();
 };
 
 
 struct KeywordToken
 : Token
 {
-    KeywordToken() { classType = KEYWORD_TOKEN; }
+    KeywordToken(int type, int pos, int lineNum, int linePos)
+    :Token(KEYWORD_TOKEN, type, pos, lineNum, linePos) {}
+
+    virtual std::string toString();
 };
 
 
@@ -83,7 +99,10 @@ struct OperatorToken
 {
     int operatorType;
 
-    OperatorToken() { classType = OPERATOR_TOKEN; }
+    OperatorToken(int type, int pos, int lineNum, int linePos, int opType)
+    :Token(OPERATOR_TOKEN, type, pos, lineNum, linePos), operatorType(opType) {}
+
+    virtual std::string toString();
 };
 
 struct IdentifierToken
@@ -91,14 +110,26 @@ struct IdentifierToken
 {
     std::string name;
 
-    IdentifierToken() { classType = IDENTIFIER_TOKEN; }
+    IdentifierToken(int type, int pos, int lineNum, int linePos, std::string name)
+    :Token(IDENTIFIER_TOKEN, type, pos, lineNum, linePos), name(name) {}
+
+    virtual std::string toString();
 };
 
 
 struct LiteralToken
 : Token
 {
-    std::variant<long long, double, bool, std::string> value;
+    std::variant<long long, double, std::string> value;
 
-    LiteralToken() { classType = LITERAL_TOKEN; }
+    LiteralToken(int type, int pos, int lineNum, int linePos, long long value)
+    :Token(LITERAL_TOKEN, type, pos, lineNum, linePos), value(value) {}
+
+    LiteralToken(int type, int pos, int lineNum, int linePos, double value)
+    :Token(LITERAL_TOKEN, type, pos, lineNum, linePos), value(value) {}
+
+    LiteralToken(int type, int pos, int lineNum, int linePos, std::string value)
+    :Token(LITERAL_TOKEN, type, pos, lineNum, linePos), value(value) {}
+
+    virtual std::string toString();
 };

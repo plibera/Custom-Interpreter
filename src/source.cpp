@@ -25,7 +25,7 @@ char Source::get()
     {
         lineIndex++;
     }
-    return input.get();
+    return c;
 }
 
 int Source::getSourceIndex()

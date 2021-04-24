@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 include_directories(include)
 add_executable(tkom 
+    src/token.cpp
     src/source.cpp
     src/lexer.cpp
     src/main.cpp
