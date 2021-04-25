@@ -3,7 +3,7 @@
 using namespace std;
 
 
-bool LexerTest::areTokensEqual(Token* a, Token* b)
+bool areTokensEqual(Token* a, Token* b)
 {
     if(a == nullptr || b == nullptr)
     {
