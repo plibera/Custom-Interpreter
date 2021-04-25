@@ -1,0 +1,17 @@
+Keyword<int> Identifier<Variable(a)> Operator<Assign> Literal<Integer(5)> Keyword<semicolon> 
+Keyword<while> Keyword<left_paren> Identifier<Variable(a)> Operator<Rel(>)> Literal<Integer(0)> Keyword<right_paren> 
+Keyword<left_bracket> 
+Keyword<if> Keyword<left_paren> Identifier<Variable(a)> Operator<Eq(==)> Literal<Integer(3)> Keyword<right_paren> Keyword<left_bracket> 
+Identifier<Variable(println)> Keyword<left_paren> Literal<String(A jest rowne 3)> Keyword<right_paren> Keyword<semicolon> 
+Keyword<right_bracket> 
+Keyword<else> 
+Keyword<left_bracket> 
+Keyword<if> Keyword<left_paren> Identifier<Variable(a)> Operator<Eq(==)> Literal<Integer(2)> Keyword<right_paren> Keyword<left_bracket> 
+Identifier<Variable(println)> Keyword<left_paren> Literal<String(A nie jest rowne 3, ale jest rowne 2)> Keyword<right_paren> Keyword<semicolon> 
+Keyword<right_bracket> 
+Keyword<else> Keyword<left_bracket> 
+Identifier<Variable(println)> Keyword<left_paren> Literal<String(A nie jest rowne ani 3, ani 2)> Keyword<right_paren> Keyword<semicolon> 
+Keyword<right_bracket> 
+Keyword<right_bracket> 
+Identifier<Variable(a)> Operator<Assign> Identifier<Variable(a)> Operator<Add(-)> Literal<Integer(1)> Keyword<semicolon> 
+Keyword<right_bracket> 

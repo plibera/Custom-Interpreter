@@ -2,15 +2,15 @@ Int a = 5;
 while(a > 0)
 {
     if(a == 3) {
-        print("A jest rowne 3\n");
+        println("A jest rowne 3");
     }
     else
     {
         if(a == 2) {
-            print("A nie jest rowne 3, ale jest rowne 2\n");
+            println("A nie jest rowne 3, ale jest rowne 2");
         }
         else {
-            print("A nie jest rowne ani 3, ani 2\n");
+            println("A nie jest rowne ani 3, ani 2");
         }
     }
     

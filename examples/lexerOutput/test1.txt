@@ -1,0 +1,20 @@
+Keyword<int> Identifier<Variable(int1)> Operator<Assign> Literal<Integer(5)> Keyword<semicolon> 
+Keyword<float> Identifier<Variable(float1)> Operator<Assign> Literal<Float(3.200000)> Keyword<semicolon> 
+Keyword<bool> Identifier<Variable(bool1)> Operator<Assign> Keyword<true> Keyword<semicolon> 
+Keyword<string> Identifier<Variable(str1)> Operator<Assign> Literal<String(String)> Keyword<semicolon> 
+Keyword<int> Identifier<Variable(int2)> Operator<Assign> Identifier<Variable(int)> Keyword<left_paren> Literal<Float(5.200000)> Keyword<right_paren> Keyword<semicolon> 
+Keyword<int> Identifier<Variable(int3)> Operator<Assign> Identifier<Variable(int)> Keyword<left_paren> Keyword<true> Keyword<right_paren> Keyword<semicolon> 
+Keyword<float> Identifier<Variable(float2)> Operator<Assign> Identifier<Variable(float)> Keyword<left_paren> Literal<Integer(5)> Keyword<right_paren> Keyword<semicolon> 
+Keyword<float> Identifier<Variable(float3)> Operator<Assign> Identifier<Variable(float)> Keyword<left_paren> Keyword<true> Keyword<right_paren> Keyword<semicolon> 
+Keyword<bool> Identifier<Variable(bool2)> Operator<Assign> Identifier<Variable(bool)> Keyword<left_paren> Literal<Integer(1)> Keyword<right_paren> Keyword<semicolon> 
+Keyword<bool> Identifier<Variable(bool3)> Operator<Assign> Identifier<Variable(bool)> Keyword<left_paren> Literal<Float(1.100000)> Keyword<right_paren> Keyword<semicolon> 
+Keyword<string> Identifier<Variable(str2)> Operator<Assign> Identifier<Variable(str)> Keyword<left_paren> Identifier<Variable(int1)> Keyword<right_paren> Keyword<semicolon> 
+Keyword<string> Identifier<Variable(str3)> Operator<Assign> Identifier<Variable(str)> Keyword<left_paren> Identifier<Variable(float1)> Keyword<right_paren> Keyword<semicolon> 
+Keyword<string> Identifier<Variable(str4)> Operator<Assign> Identifier<Variable(str)> Keyword<left_paren> Identifier<Variable(bool1)> Keyword<right_paren> Keyword<semicolon> 
+Keyword<string> Identifier<Variable(str5)> Operator<Assign> Literal<String(x
+y	"	zznzzn)> 
+Keyword<semicolon> 
+Keyword<int> Identifier<Variable(a)> Operator<Assign> Keyword<left_paren> Identifier<Variable(int1)> Operator<Add(+)> Identifier<Variable(int2)> Keyword<right_paren> Operator<Mul(*)> Identifier<Variable(int)> Keyword<left_paren> Identifier<Variable(float1)> Operator<Add(+)> Identifier<Variable(float2)> Keyword<right_paren> Keyword<semicolon> 
+Keyword<int> Identifier<Variable(b)> Operator<Assign> Identifier<Variable(int)> Keyword<left_paren> Identifier<Variable(bool1)> Operator<Add(+)> Identifier<Variable(bool2)> Keyword<right_paren> Keyword<semicolon> 
+Keyword<int> Identifier<Variable(c)> Operator<Assign> Keyword<left_paren> Identifier<Variable(a)> Operator<Add(+)> Identifier<Variable(b)> Keyword<right_paren> Operator<Exp> Literal<Integer(2)> Keyword<semicolon> 
+Keyword<string> Identifier<Variable(str5)> Operator<Assign> Identifier<Variable(str1)> Operator<Add(+)> Identifier<Variable(str2)> Operator<Add(+)> Identifier<Variable(str)> Keyword<left_paren> Identifier<Variable(c)> Keyword<right_paren> Keyword<semicolon> 

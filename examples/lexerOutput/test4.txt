@@ -1,0 +1,21 @@
+Keyword<int> Identifier<Variable(dodaj)> Keyword<left_paren> Identifier<Variable(int)> Identifier<Variable(a)> Keyword<comma> Identifier<Variable(int)> Identifier<Variable(b)> Keyword<right_paren> 
+Keyword<left_bracket> 
+Keyword<return> Identifier<Variable(a)> Operator<Add(+)> Identifier<Variable(b)> Keyword<semicolon> 
+Keyword<right_bracket> 
+Keyword<int> Identifier<Variable(dodaj5)> Keyword<left_paren> Identifier<Variable(int)> Identifier<Variable(a)> Keyword<right_paren> 
+Keyword<left_bracket> 
+Identifier<Variable(a)> Operator<Assign> Identifier<Variable(a)> Operator<Add(+)> Literal<Integer(5)> Keyword<semicolon> 
+Keyword<return> Identifier<Variable(a)> Keyword<semicolon> 
+Keyword<right_bracket> 
+Keyword<int> Identifier<Variable(a)> Operator<Assign> Literal<Integer(2)> Keyword<semicolon> 
+Keyword<int> Identifier<Variable(b)> Operator<Assign> Identifier<Variable(dodaj)> Keyword<left_paren> Identifier<Variable(a)> Keyword<comma> Literal<Integer(4)> Keyword<right_paren> Keyword<semicolon> 
+Keyword<int> Identifier<Variable(c)> Operator<Assign> Identifier<Variable(dodaj5)> Keyword<left_paren> Identifier<Variable(a)> Keyword<right_paren> Keyword<semicolon> 
+Identifier<Variable(println)> Keyword<left_paren> Identifier<Variable(a)> Keyword<right_paren> Keyword<semicolon> 
+Identifier<Variable(println)> Keyword<left_paren> Identifier<Variable(b)> Keyword<right_paren> Keyword<semicolon> 
+Identifier<Variable(println)> Keyword<left_paren> Identifier<Variable(c)> Keyword<right_paren> Keyword<semicolon> 
+Keyword<int> Identifier<Variable(silnia)> Keyword<left_paren> Identifier<Variable(int)> Identifier<Variable(n)> Keyword<right_paren> 
+Keyword<left_bracket> 
+Keyword<if> Keyword<left_paren> Identifier<Variable(n)> Operator<Rel(<=)> Literal<Integer(1)> Keyword<right_paren> Keyword<left_bracket> Keyword<return> Literal<Integer(1)> Keyword<semicolon> Keyword<right_bracket> 
+Keyword<return> Identifier<Variable(n)> Operator<Mul(*)> Identifier<Variable(silnia)> Keyword<left_paren> Identifier<Variable(n)> Operator<Add(-)> Literal<Integer(1)> Keyword<right_paren> Keyword<semicolon> 
+Keyword<right_bracket> 
+Identifier<Variable(print)> Keyword<left_paren> Identifier<Variable(silnia)> Keyword<left_paren> Literal<Integer(5)> Keyword<right_paren> Keyword<right_paren> Keyword<semicolon> 

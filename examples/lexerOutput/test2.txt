@@ -1,0 +1,7 @@
+Keyword<int> Identifier<Variable(a)> Operator<Assign> Literal<Integer(5)> Keyword<semicolon> 
+Keyword<left_bracket> 
+Identifier<Variable(a)> Operator<Assign> Literal<Integer(7)> Keyword<semicolon> 
+Keyword<int> Identifier<Variable(b)> Operator<Assign> Literal<Integer(1)> Keyword<semicolon> 
+Keyword<right_bracket> 
+Identifier<Variable(println)> Keyword<left_paren> Identifier<Variable(a)> Keyword<right_paren> Keyword<semicolon> 
+Identifier<Variable(println)> Keyword<left_paren> Identifier<Variable(b)> Keyword<right_paren> Keyword<semicolon> 

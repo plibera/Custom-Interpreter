@@ -73,25 +73,25 @@ Punkt b(0.0, 6.2);
 Punkt c(3.2, -4.8);
 Trojkat t(a, b, c);
 float pole = t.pole();
-print("Pole trojkata to " + str(pole) + "\n");
+println("Pole trojkata to " + str(pole));
 a.x = 20;
 if(t.pole != pole)
 {
-    print("Cos nie tak, tu pole nie powinno sie zmienic\n");
+    println("Cos nie tak, tu pole nie powinno sie zmienic");
 }    
 else
 {
-    print("Pole sie nie zmienilo\n");
+    println("Pole sie nie zmienilo");
 }
 t.setA(a);
 if(t.pole != pole)
 {
     String komunikat = "Pole trojkata zmienilo sie. Teraz jest rowne ";
     String poleStr = str(t.pole);
-    komunikat = komunikat + poleStr + "\n";
-    print(komunikat);
+    komunikat = komunikat + poleStr;
+    println(komunikat);
 }    
 else
 {
-    print("Cos nie tak, pole sie nie zmienilo\n");
+    println("Cos nie tak, pole sie nie zmienilo");
 }

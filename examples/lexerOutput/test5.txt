@@ -1,0 +1,80 @@
+
+Keyword<class> Identifier<Type(Punkt)> 
+Keyword<left_bracket> 
+Keyword<public> Keyword<float> Identifier<Variable(x)> Keyword<semicolon> 
+Keyword<public> Keyword<float> Identifier<Variable(y)> Keyword<semicolon> 
+Keyword<public> Identifier<Type(Point)> Keyword<left_paren> Keyword<float> Identifier<Variable(x)> Keyword<comma> Keyword<float> Identifier<Variable(y)> Keyword<right_paren> 
+Keyword<left_bracket> 
+Identifier<Variable(this)> Keyword<access_operator> Identifier<Variable(x)> Operator<Assign> Identifier<Variable(x)> Keyword<semicolon> 
+Identifier<Variable(this)> Keyword<access_operator> Identifier<Variable(y)> Operator<Assign> Identifier<Variable(y)> Keyword<semicolon> 
+Keyword<right_bracket> 
+Keyword<right_bracket> 
+Keyword<class> Identifier<Type(Trojkat)> 
+Keyword<left_bracket> 
+Identifier<Type(Punkt)> Identifier<Variable(a)> Keyword<semicolon> 
+Identifier<Type(Punkt)> Identifier<Variable(b)> Keyword<semicolon> 
+Identifier<Type(Punkt)> Identifier<Variable(c)> Keyword<semicolon> 
+Keyword<float> Identifier<Variable(sideA)> Keyword<semicolon> 
+Keyword<float> Identifier<Variable(sideB)> Keyword<semicolon> 
+Keyword<float> Identifier<Variable(sideC)> Keyword<semicolon> 
+Identifier<Variable(void)> Identifier<Variable(zaktualizujBoki)> Keyword<left_paren> Keyword<right_paren> 
+Keyword<left_bracket> 
+Identifier<Variable(sideA)> Operator<Assign> Keyword<left_paren> Keyword<left_paren> Identifier<Variable(a)> Keyword<access_operator> Identifier<Variable(x)> Operator<Add(-)> Identifier<Variable(b)> Keyword<access_operator> Identifier<Variable(x)> Keyword<right_paren> Operator<Exp> Literal<Integer(2)> Operator<Add(+)> Keyword<left_paren> Identifier<Variable(a)> Keyword<access_operator> Identifier<Variable(y)> Operator<Add(-)> Identifier<Variable(b)> Keyword<access_operator> Identifier<Variable(y)> Keyword<right_paren> Operator<Exp> Literal<Integer(2)> Keyword<right_paren> Operator<Exp> Literal<Float(0.500000)> Keyword<semicolon> 
+Identifier<Variable(sideB)> Operator<Assign> Keyword<left_paren> Keyword<left_paren> Identifier<Variable(b)> Keyword<access_operator> Identifier<Variable(x)> Operator<Add(-)> Identifier<Variable(c)> Keyword<access_operator> Identifier<Variable(x)> Keyword<right_paren> Operator<Exp> Literal<Integer(2)> Operator<Add(+)> Keyword<left_paren> Identifier<Variable(b)> Keyword<access_operator> Identifier<Variable(y)> Operator<Add(-)> Identifier<Variable(c)> Keyword<access_operator> Identifier<Variable(y)> Keyword<right_paren> Operator<Exp> Literal<Integer(2)> Keyword<right_paren> Operator<Exp> Literal<Float(0.500000)> Keyword<semicolon> 
+Identifier<Variable(sideC)> Operator<Assign> Keyword<left_paren> Keyword<left_paren> Identifier<Variable(c)> Keyword<access_operator> Identifier<Variable(x)> Operator<Add(-)> Identifier<Variable(a)> Keyword<access_operator> Identifier<Variable(x)> Keyword<right_paren> Operator<Exp> Literal<Integer(2)> Operator<Add(+)> Keyword<left_paren> Identifier<Variable(c)> Keyword<access_operator> Identifier<Variable(y)> Operator<Add(-)> Identifier<Variable(a)> Keyword<access_operator> Identifier<Variable(y)> Keyword<right_paren> Operator<Exp> Literal<Integer(2)> Keyword<right_paren> Operator<Exp> Literal<Float(0.500000)> Keyword<semicolon> 
+Keyword<right_bracket> 
+Keyword<public> Identifier<Type(Trojkat)> Keyword<left_paren> Identifier<Type(Punkt)> Identifier<Variable(na)> Keyword<comma> Identifier<Type(Punkt)> Identifier<Variable(nb)> Keyword<comma> Identifier<Type(Punkt)> Identifier<Variable(nc)> Keyword<right_paren> Keyword<left_bracket> 
+Identifier<Variable(a)> Operator<Assign> Identifier<Variable(na)> Keyword<semicolon> 
+Identifier<Variable(b)> Operator<Assign> Identifier<Variable(nb)> Keyword<semicolon> 
+Identifier<Variable(c)> Operator<Assign> Identifier<Variable(nc)> Keyword<semicolon> 
+Identifier<Variable(zaktualizujBoki)> Keyword<left_paren> Keyword<right_paren> Keyword<semicolon> 
+Keyword<right_bracket> 
+Keyword<public> Identifier<Variable(void)> Identifier<Variable(setA)> Keyword<left_paren> Identifier<Type(Punkt)> Identifier<Variable(na)> Keyword<right_paren> 
+Keyword<left_bracket> 
+Identifier<Variable(a)> Operator<Assign> Identifier<Variable(na)> Keyword<semicolon> 
+Identifier<Variable(zaktualizujBoki)> Keyword<left_paren> Keyword<right_paren> Keyword<semicolon> 
+Keyword<right_bracket> 
+Keyword<public> Identifier<Variable(void)> Identifier<Variable(setB)> Keyword<left_paren> Identifier<Type(Punkt)> Identifier<Variable(nb)> Keyword<right_paren> 
+Keyword<left_bracket> 
+Identifier<Variable(b)> Operator<Assign> Identifier<Variable(nb)> Keyword<semicolon> 
+Identifier<Variable(zaktualizujBoki)> Keyword<left_paren> Keyword<right_paren> Keyword<semicolon> 
+Keyword<right_bracket> 
+Keyword<public> Identifier<Variable(void)> Identifier<Variable(setC)> Keyword<left_paren> Identifier<Type(Punkt)> Identifier<Variable(nc)> Keyword<right_paren> 
+Keyword<left_bracket> 
+Identifier<Variable(c)> Operator<Assign> Identifier<Variable(nc)> Keyword<semicolon> 
+Identifier<Variable(zaktualizujBoki)> Keyword<left_paren> Keyword<right_paren> Keyword<semicolon> 
+Keyword<right_bracket> 
+Keyword<public> Keyword<float> Identifier<Variable(obwod)> Keyword<left_paren> Keyword<right_paren> Keyword<left_bracket> 
+Keyword<return> Identifier<Variable(sideA)> Operator<Add(+)> Identifier<Variable(sideB)> Operator<Add(+)> Identifier<Variable(sideC)> Keyword<semicolon> 
+Keyword<right_bracket> 
+Keyword<public> Keyword<float> Identifier<Variable(pole)> Keyword<left_paren> Keyword<right_paren> Keyword<left_bracket> 
+Keyword<float> Identifier<Variable(s)> Operator<Assign> Identifier<Variable(obwod)> Keyword<left_paren> Keyword<right_paren> Operator<Mul(/)> Literal<Integer(2)> Keyword<semicolon> 
+Keyword<return> Keyword<left_paren> Identifier<Variable(s)> Operator<Mul(*)> Keyword<left_paren> Identifier<Variable(s)> Operator<Add(-)> Identifier<Variable(sideA)> Keyword<right_paren> Operator<Mul(*)> Keyword<left_paren> Identifier<Variable(s)> Operator<Add(-)> Identifier<Variable(sideB)> Keyword<right_paren> Operator<Mul(*)> Keyword<left_paren> Identifier<Variable(s)> Operator<Add(-)> Identifier<Variable(c)> Keyword<right_paren> Keyword<right_paren> Operator<Exp> Literal<Float(0.500000)> Keyword<semicolon> 
+Keyword<right_bracket> 
+Identifier<Type(Punkt)> Identifier<Variable(a)> Keyword<left_paren> Literal<Integer(5)> Keyword<comma> Literal<Integer(5)> Keyword<right_paren> Keyword<semicolon> 
+Identifier<Type(Punkt)> Identifier<Variable(b)> Keyword<left_paren> Literal<Float(0.000000)> Keyword<comma> Literal<Float(6.200000)> Keyword<right_paren> Keyword<semicolon> 
+Identifier<Type(Punkt)> Identifier<Variable(c)> Keyword<left_paren> Literal<Float(3.200000)> Keyword<comma> Operator<Add(-)> Literal<Float(4.800000)> Keyword<right_paren> Keyword<semicolon> 
+Identifier<Type(Trojkat)> Identifier<Variable(t)> Keyword<left_paren> Identifier<Variable(a)> Keyword<comma> Identifier<Variable(b)> Keyword<comma> Identifier<Variable(c)> Keyword<right_paren> Keyword<semicolon> 
+Identifier<Variable(float)> Identifier<Variable(pole)> Operator<Assign> Identifier<Variable(t)> Keyword<access_operator> Identifier<Variable(pole)> Keyword<left_paren> Keyword<right_paren> Keyword<semicolon> 
+Identifier<Variable(println)> Keyword<left_paren> Literal<String(Pole trojkata to )> Operator<Add(+)> Identifier<Variable(str)> Keyword<left_paren> Identifier<Variable(pole)> Keyword<right_paren> Keyword<right_paren> Keyword<semicolon> 
+Identifier<Variable(a)> Keyword<access_operator> Identifier<Variable(x)> Operator<Assign> Literal<Integer(20)> Keyword<semicolon> 
+Keyword<if> Keyword<left_paren> Identifier<Variable(t)> Keyword<access_operator> Identifier<Variable(pole)> Operator<Eq(!=)> Identifier<Variable(pole)> Keyword<right_paren> 
+Keyword<left_bracket> 
+Identifier<Variable(println)> Keyword<left_paren> Literal<String(Cos nie tak, tu pole nie powinno sie zmienic)> Keyword<right_paren> Keyword<semicolon> 
+Keyword<right_bracket> 
+Keyword<else> 
+Keyword<left_bracket> 
+Identifier<Variable(println)> Keyword<left_paren> Literal<String(Pole sie nie zmienilo)> Keyword<right_paren> Keyword<semicolon> 
+Keyword<right_bracket> 
+Identifier<Variable(t)> Keyword<access_operator> Identifier<Variable(setA)> Keyword<left_paren> Identifier<Variable(a)> Keyword<right_paren> Keyword<semicolon> 
+Keyword<if> Keyword<left_paren> Identifier<Variable(t)> Keyword<access_operator> Identifier<Variable(pole)> Operator<Eq(!=)> Identifier<Variable(pole)> Keyword<right_paren> 
+Keyword<left_bracket> 
+Keyword<string> Identifier<Variable(komunikat)> Operator<Assign> Literal<String(Pole trojkata zmienilo sie. Teraz jest rowne )> Keyword<semicolon> 
+Keyword<string> Identifier<Variable(poleStr)> Operator<Assign> Identifier<Variable(str)> Keyword<left_paren> Identifier<Variable(t)> Keyword<access_operator> Identifier<Variable(pole)> Keyword<right_paren> Keyword<semicolon> 
+Identifier<Variable(komunikat)> Operator<Assign> Identifier<Variable(komunikat)> Operator<Add(+)> Identifier<Variable(poleStr)> Keyword<semicolon> 
+Identifier<Variable(println)> Keyword<left_paren> Identifier<Variable(komunikat)> Keyword<right_paren> Keyword<semicolon> 
+Keyword<right_bracket> 
+Keyword<else> 
+Keyword<left_bracket> 
+Identifier<Variable(println)> Keyword<left_paren> Literal<String(Cos nie tak, pole sie nie zmienilo)> Keyword<right_paren> Keyword<semicolon> 
+Keyword<right_bracket> 
