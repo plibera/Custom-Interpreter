@@ -77,7 +77,7 @@ bool areTokensEqual(Token* a, Token* b)
         }
         if(at->value != bt->value)
         {
-            cerr<<"Different token literal value"<<endl;
+            cerr<<"Different token literal value - Got: "<<get<string>(at->value)<<"  Expected: "<<get<string>(bt->value)<<endl;
             return false;
         }
     }

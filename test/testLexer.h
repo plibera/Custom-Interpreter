@@ -467,3 +467,268 @@ TEST(LexerTest, ConstructsCommaKeywordToken) {
 
 
 
+TEST(LexerTest, ConstructsAssignEqTokens)
+{
+    std::stringstream ss;
+    ss<<"= == === =! =^ a=b a!=b";
+    Lexer* lexer = new Lexer(ss);
+    Token* t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_ASSIGN, 0, 0, 0, operatorIdMap["="])));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_EQ, 2, 0, 2, operatorIdMap["=="])));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_EQ, 5, 0, 5, operatorIdMap["=="])));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_ASSIGN, 7, 0, 7, operatorIdMap["="])));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_ASSIGN, 9, 0, 9, operatorIdMap["="])));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new Token(UNKNOWN_TOKEN, 0, 10, 0, 10)));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_ASSIGN, 12, 0, 12, operatorIdMap["="])));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new Token(UNKNOWN_TOKEN, 0, 13, 0, 13)));
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 15, 0, 15, "a")));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_ASSIGN, 16, 0, 16, operatorIdMap["="])));
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 17, 0, 17, "b")));
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 19, 0, 19, "a")));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_EQ, 20, 0, 20, operatorIdMap["!="])));
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 22, 0, 22, "b")));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new Token(EOT_TOKEN, 0, 23, 0, 23)));
+    delete lexer, t;
+}
+
+
+TEST(LexerTest, ConstructsRelTokens)
+{
+    std::stringstream ss;
+    ss<<"a<b a<=b a>b a>=b >>=><=";
+    Lexer* lexer = new Lexer(ss);
+    Token* t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 0, 0, 0, "a")));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_REL, 1, 0, 1, operatorIdMap["<"])));
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 2, 0, 2, "b")));
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 4, 0, 4, "a")));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_REL, 5, 0, 5, operatorIdMap["<="])));
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 7, 0, 7, "b")));
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 9, 0, 9, "a")));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_REL, 10, 0, 10, operatorIdMap[">"])));
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 11, 0, 11, "b")));
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 13, 0, 13, "a")));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_REL, 14, 0, 14, operatorIdMap[">="])));
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 16, 0, 16, "b")));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_REL, 18, 0, 18, operatorIdMap[">"])));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_REL, 19, 0, 19, operatorIdMap[">="])));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_REL, 21, 0, 21, operatorIdMap[">"])));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_REL, 22, 0, 22, operatorIdMap["<="])));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new Token(EOT_TOKEN, 0, 24, 0, 24)));
+    delete lexer, t;
+}
+
+
+TEST(LexerTest, ConstructsAddTokens)
+{
+    std::stringstream ss;
+    ss<<"a+b a-b a++ -+";
+    Lexer* lexer = new Lexer(ss);
+    Token* t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 0, 0, 0, "a")));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_ADD, 1, 0, 1, operatorIdMap["+"])));
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 2, 0, 2, "b")));
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 4, 0, 4, "a")));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_ADD, 5, 0, 5, operatorIdMap["-"])));
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 6, 0, 6, "b")));
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 8, 0, 8, "a")));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_ADD, 9, 0, 9, operatorIdMap["+"])));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_ADD, 10, 0, 10, operatorIdMap["+"])));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_ADD, 12, 0, 12, operatorIdMap["-"])));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_ADD, 13, 0, 13, operatorIdMap["+"])));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new Token(EOT_TOKEN, 0, 14, 0, 14)));
+    delete lexer, t;
+}
+
+TEST(LexerTest, ConstructsMulExpTokens)
+{
+    std::stringstream ss;
+    ss<<"a*b a/b a**2 *** * */";
+    Lexer* lexer = new Lexer(ss);
+    Token* t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 0, 0, 0, "a")));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_MUL, 1, 0, 1, operatorIdMap["*"])));
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 2, 0, 2, "b")));
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 4, 0, 4, "a")));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_MUL, 5, 0, 5, operatorIdMap["/"])));
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 6, 0, 6, "b")));
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 8, 0, 8, "a")));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_EXP, 9, 0, 9, operatorIdMap["**"])));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new LiteralToken(T_INT_LIT, 11, 0, 11, (long long)2)));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_EXP, 13, 0, 13, operatorIdMap["**"])));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_MUL, 15, 0, 15, operatorIdMap["*"])));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_MUL, 17, 0, 17, operatorIdMap["*"])));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_MUL, 19, 0, 19, operatorIdMap["*"])));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_MUL, 20, 0, 20, operatorIdMap["/"])));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new Token(EOT_TOKEN, 0, 21, 0, 21)));
+    delete lexer, t;
+}
+
+
+TEST(LexerTest, ConstructsIdentifierTokens)
+{
+    std::stringstream ss;
+    ss<<"a ab a0C_ B B0_x a%a aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+    Lexer* lexer = new Lexer(ss);
+    Token* t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 0, 0, 0, "a")));  
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 2, 0, 2, "ab")));
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 5, 0, 5, "a0C_")));
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_TYPE, 10, 0, 10, "B")));
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_TYPE, 12, 0, 12, "B0_x")));
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 17, 0, 17, "a")));
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new Token(UNKNOWN_TOKEN, 0, 18, 0, 18)));
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 19, 0, 19, "a")));
+    ASSERT_THROW(lexer->getToken(), std::runtime_error); 	
+    delete lexer, t;
+}
+
+
+TEST(LexerTest, ConstructsStringLiteralTokens)
+{
+    std::stringstream ss;
+    ss<<"\"\\\\\"\"";
+    Lexer* lexer = new Lexer(ss);
+    Token* t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new LiteralToken(T_STRING_LIT, 0, 0, 0, "\\")));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new Token(UNKNOWN_TOKEN, 0, 4, 0, 4)));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new Token(EOT_TOKEN, 0, 6, 0, 6)));
+    delete lexer, t;
+}
+
+TEST(LexerTest, ConstructsStringLiteralTokens2)
+{
+    std::stringstream ss;
+    ss<<"\"\\\\\\\"\"";
+    Lexer* lexer = new Lexer(ss);
+    Token* t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new LiteralToken(T_STRING_LIT, 0, 0, 0, "\\\"")));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new Token(EOT_TOKEN, 0, 6, 0, 6)));
+    delete lexer, t;
+}
+
+TEST(LexerTest, ConstructsStringLiteralTokens3)
+{
+    std::stringstream ss;
+    ss<<"\"123456789";
+    Lexer* lexer = new Lexer(ss);
+    Token* t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new Token(UNKNOWN_TOKEN, 0, 0, 0, 0)));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new Token(EOT_TOKEN, 0, 11, 0, 11)));
+    delete lexer, t;
+}
+
+TEST(LexerTest, ConstructsStringLiteralTokens4)
+{
+    std::stringstream ss;
+    ss<<"s = \"To jest string: !@#fs2432!@#$%^&*()_=-=_+_[]p{}P\|';[;';?/?.,>< \n \t \\\"\"";
+    Lexer* lexer = new Lexer(ss);
+    Token* t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new IdentifierToken(T_VAR, 0, 0, 0, "s")));
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new OperatorToken(T_ASSIGN, 2, 0, 2, operatorIdMap["="])));
+    t = lexer->getToken();    
+    ASSERT_TRUE(areTokensEqual(t, new LiteralToken(T_STRING_LIT, 4, 0, 4, "To jest string: !@#fs2432!@#$%^&*()_=-=_+_[]p{}P|';[;';?/?.,>< \n \t \"")));
+    delete lexer, t;
+}
+
+
+TEST(LexerTest, ConstructsNumericLiteralTokens)
+{
+    std::stringstream ss;
+    ss<<"0 123 0.5 41.52 01 0.1.1 5. .6 12a";
+    Lexer* lexer = new Lexer(ss);
+    Token* t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new LiteralToken(T_INT_LIT, 0, 0, 0, (long long)0)));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new LiteralToken(T_INT_LIT, 2, 0, 2, (long long)123)));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new LiteralToken(T_FLOAT_LIT, 6, 0, 6, (double)0.5)));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new LiteralToken(T_FLOAT_LIT, 10, 0, 10, (double)41.52)));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new Token(UNKNOWN_TOKEN, 0, 16, 0, 16)));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new LiteralToken(T_FLOAT_LIT, 19, 0, 19, (double)0.1)));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new KeywordToken(T_ACCESS, 22, 0, 22)));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new LiteralToken(T_INT_LIT, 23, 0, 23, (long long)1)));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new Token(UNKNOWN_TOKEN, 0, 25, 0, 25)));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new KeywordToken(T_ACCESS, 28, 0, 28)));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new LiteralToken(T_INT_LIT, 29, 0, 29, (long long)6)));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new Token(UNKNOWN_TOKEN, 0, 31, 0, 31)));
+    t = lexer->getToken();
+    ASSERT_TRUE(areTokensEqual(t, new Token(EOT_TOKEN, 0, 34, 0, 34)));
+    delete lexer, t;
+}

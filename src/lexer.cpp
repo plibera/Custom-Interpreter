@@ -215,17 +215,27 @@ Token* Lexer::buildStringLiteral()
     nextChar = source.get();
     int counter = 0;
     bool isNextLiteral = false;
-    while(nextChar != '"' || isNextLiteral)
+    while((nextChar != '"' || isNextLiteral) && nextChar != EOF)
     {
-        ss<<nextChar;
-        counter++;
+        if(nextChar != '\\' || isNextLiteral)
+        {
+            ss<<nextChar;
+            counter++;
+            isNextLiteral = false;
+        }
+        else
+        {
+            isNextLiteral = true;
+        }
+        
         if(counter > MAX_STRING_LITERAL_LENGTH)
             throw runtime_error("String literal exceeded maximum allowed length");
         
-        isNextLiteral = nextChar == '\\';
         nextChar = source.get();
-        if(nextChar == EOF)
-            return nullptr;
+    }
+    if(nextChar == EOF)
+    {
+        return nullptr;
     }
     string value = ss.str();
     nextChar = source.get();
