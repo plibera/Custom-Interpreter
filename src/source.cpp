@@ -7,9 +7,9 @@ using namespace std;
 Source::Source(std::istream& stream)
 : input(stream)
 {
-    sourceIndex = 0;
+    sourceIndex = -1;
     lineNumber = 0;
-    lineIndex = 0;
+    lineIndex = -1;
 }
 
 char Source::get()
