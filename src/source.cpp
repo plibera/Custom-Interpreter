@@ -5,16 +5,12 @@ using namespace std;
 
 
 Source::Source(std::istream& stream)
-: input(stream)
-{
-    sourceIndex = -1;
-    lineNumber = 0;
-    lineIndex = -1;
-}
+: input(stream), sourceIndex(-1), lineNumber(0), lineIndex(-1)
+{}
 
-char Source::get()
+const char Source::get()
 {
-    char c = input.get();
+    const char c = input.get();
     sourceIndex++;
     if(c == '\n')
     {
@@ -28,17 +24,17 @@ char Source::get()
     return c;
 }
 
-int Source::getSourceIndex()
+const int Source::getSourceIndex()
 {
     return sourceIndex;
 }
 
-int Source::getLineNumber()
+const int Source::getLineNumber()
 {
     return lineNumber;
 }
 
-int Source::getLineIndex()
+const int Source::getLineIndex()
 {
     return lineIndex;
 }

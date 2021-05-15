@@ -8,12 +8,6 @@
 using namespace std;
 
 
-Token* getToken()
-{
-    IdentifierToken* token = new IdentifierToken(T_VAR, 0, 0, 0, "test");
-    return token;
-}
-
 int main(int argc, char* argv[])
 {
     Lexer *lexer;
@@ -34,46 +28,18 @@ int main(int argc, char* argv[])
         lexer = new Lexer(std::cin);
     }
     
-    Token* token = lexer->getToken();
+    Token token = lexer->getToken();
     int lineNum = 0;
-    while(token->classType != EOT_TOKEN)
+    while(token.classType != EOT_TOKEN)
     {
-        if(lineNum < token->lineNumber)
+        if(lineNum < token.lineNumber)
         {
             cout<<endl;
-            lineNum = token->lineNumber;
+            lineNum = token.lineNumber;
         }
-        switch(token->classType)
-        {
-            case KEYWORD_TOKEN:
-            {
-                KeywordToken* tk = dynamic_cast<KeywordToken*>(token);
-                cout<<tk->toString()<<" ";
-                break;
-            }
-            case OPERATOR_TOKEN:
-            {
-                OperatorToken* tk = dynamic_cast<OperatorToken*>(token);
-                cout<<tk->toString()<<" ";
-                break;
-            }
-            case IDENTIFIER_TOKEN:
-            {
-                IdentifierToken* tk = dynamic_cast<IdentifierToken*>(token);
-                cout<<tk->toString()<<" ";
-                break;
-            }
-            case LITERAL_TOKEN:
-            {
-                LiteralToken* tk = dynamic_cast<LiteralToken*>(token);
-                cout<<tk->toString()<<" ";
-                break;
-            }
-            default:
-                cout<<token->toString()<<" ";
-                break;
-        }
+        cout<<token.toString()<<" ";
         token = lexer->getToken();
     }
     cout<<endl;
+    delete lexer;
 }

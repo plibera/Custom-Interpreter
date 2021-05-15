@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <limits>
 
 #include "token.h"
 #include "source.h"
@@ -17,6 +18,7 @@ class Lexer
     int pos;
     int lNum;
     int lPos;
+    Token* token;
 
     void skipWhitesAndComments();
     //Builds parentheses, brackets, semicolon
@@ -32,6 +34,7 @@ class Lexer
 
 public:
     Lexer(std::istream& stream);
+    ~Lexer() {delete token;}
 
-    Token* getToken();
+    Token getToken();
 };

@@ -21,7 +21,6 @@ add_executable(tkom
 
 add_executable(testTkom
     test/test.cpp
-    test/testLexer.cpp
     src/token.cpp
     src/source.cpp
     src/lexer.cpp

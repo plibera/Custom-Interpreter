@@ -9,7 +9,7 @@ Lexer::Lexer(std::istream& stream)
 }
 
 
-Token* Lexer::getToken()
+Token Lexer::getToken()
 {
     skipWhitesAndComments();
     pos = source.getSourceIndex();
@@ -17,27 +17,28 @@ Token* Lexer::getToken()
     lPos = source.getLineIndex();
     if(nextChar == EOF)
     {
-        return new Token(EOT_TOKEN, 0, pos, lNum, lPos);
+        return Token(EOT_TOKEN, 0, pos, lNum, lPos);
     }
 
-    Token* token;
+    token = nullptr;
     token = buildOneCharToken();
     if(token != nullptr)
-        return token;
+        return *token;
     token = buildKeywordOrIdentifier();
     if(token != nullptr)
-        return token;
+        return *token;
     token = buildOperator();
     if(token != nullptr)
-        return token;
+        return *token;
     token = buildStringLiteral();
     if(token != nullptr)
-        return token;
+        return *token;
     token = buildNumericLiteral();
     if(token != nullptr)
-        return token;
+        return *token;
     nextChar = source.get();
-    return new Token(UNKNOWN_TOKEN, 0, pos, lNum, lPos);
+    
+    return Token(UNKNOWN_TOKEN, 0, pos, lNum, lPos);
 }
 
 
@@ -63,25 +64,25 @@ Token* Lexer::buildOneCharToken()
     {
         case '(':
             nextChar = source.get();
-            return new KeywordToken(T_LEFTPAREN, pos, lNum, lPos);
+            return new Token(KEYWORD_TOKEN, T_LEFTPAREN, pos, lNum, lPos);
         case ')':
             nextChar = source.get();
-            return new KeywordToken(T_RIGHTPAREN, pos, lNum, lPos);
+            return new Token(KEYWORD_TOKEN, T_RIGHTPAREN, pos, lNum, lPos);
         case ';':
             nextChar = source.get();
-            return new KeywordToken(T_SEMICOLON, pos, lNum, lPos);
+            return new Token(KEYWORD_TOKEN, T_SEMICOLON, pos, lNum, lPos);
         case '{':
             nextChar = source.get();
-            return new KeywordToken(T_LEFTBRACKET, pos, lNum, lPos);
+            return new Token(KEYWORD_TOKEN, T_LEFTBRACKET, pos, lNum, lPos);
         case '}':
             nextChar = source.get();
-            return new KeywordToken(T_RIGHTBRACKET, pos, lNum, lPos);
+            return new Token(KEYWORD_TOKEN, T_RIGHTBRACKET, pos, lNum, lPos);
         case '.':
             nextChar = source.get();
-            return new KeywordToken(T_ACCESS, pos, lNum, lPos);
+            return new Token(KEYWORD_TOKEN, T_ACCESS, pos, lNum, lPos);
         case ',':
             nextChar = source.get();
-            return new KeywordToken(T_COMMA, pos, lNum, lPos);
+            return new Token(KEYWORD_TOKEN, T_COMMA, pos, lNum, lPos);
         default:
             return nullptr;
     }
@@ -111,12 +112,12 @@ Token* Lexer::buildKeywordOrIdentifier()
     auto it = keywordMap.find(name);
     if(it != keywordMap.end())
     {
-        return new KeywordToken(it->second, pos, lNum, lPos);
+        return new Token(KEYWORD_TOKEN, it->second, pos, lNum, lPos);
     }
     if(islower(name[0]))
-        return new IdentifierToken(T_VAR, pos, lNum, lPos, name);
+        return new Token(IDENTIFIER_TOKEN, T_VAR, pos, lNum, lPos, name);
     else
-        return new IdentifierToken(T_TYPE, pos, lNum, lPos, name);
+        return new Token(IDENTIFIER_TOKEN, T_TYPE, pos, lNum, lPos, name);
 }
 
 
@@ -128,11 +129,11 @@ Token* Lexer::buildOperator()
         if(nextChar == '=')
         {
             nextChar = source.get();
-            return new OperatorToken(operatorMap["=="], pos, lNum, lPos, operatorIdMap["=="]);
+            return new Token(OPERATOR_TOKEN, operatorMap.at("=="), pos, lNum, lPos, operatorIdMap.at("=="));
         }
         else
         {
-            return new OperatorToken(operatorMap["="], pos, lNum, lPos, operatorIdMap["="]);
+            return new Token(OPERATOR_TOKEN, operatorMap.at("="), pos, lNum, lPos, operatorIdMap.at("="));
         }
     }
     if(nextChar == '!')
@@ -141,7 +142,7 @@ Token* Lexer::buildOperator()
         if(nextChar == '=')
         {
             nextChar = source.get();
-            return new OperatorToken(operatorMap["!="], pos, lNum, lPos, operatorIdMap["!="]);
+            return new Token(OPERATOR_TOKEN, operatorMap.at("!="), pos, lNum, lPos, operatorIdMap.at("!="));
         }
         else
         {
@@ -155,11 +156,11 @@ Token* Lexer::buildOperator()
         if(nextChar == '=')
         {
             nextChar = source.get();
-            return new OperatorToken(operatorMap["<="], pos, lNum, lPos, operatorIdMap["<="]);
+            return new Token(OPERATOR_TOKEN, operatorMap.at("<="), pos, lNum, lPos, operatorIdMap.at("<="));
         }
         else
         {
-            return new OperatorToken(operatorMap["<"], pos, lNum, lPos, operatorIdMap["<"]);
+            return new Token(OPERATOR_TOKEN, operatorMap.at("<"), pos, lNum, lPos, operatorIdMap.at("<"));
         }
     }
     if(nextChar == '>')
@@ -168,27 +169,27 @@ Token* Lexer::buildOperator()
         if(nextChar == '=')
         {
             nextChar = source.get();
-            return new OperatorToken(operatorMap[">="], pos, lNum, lPos, operatorIdMap[">="]);
+            return new Token(OPERATOR_TOKEN, operatorMap.at(">="), pos, lNum, lPos, operatorIdMap.at(">="));
         }
         else
         {
-            return new OperatorToken(operatorMap[">"], pos, lNum, lPos, operatorIdMap[">"]);
+            return new Token(OPERATOR_TOKEN, operatorMap.at(">"), pos, lNum, lPos, operatorIdMap.at(">"));
         }
     }
     if(nextChar == '+')
     {
         nextChar = source.get();
-        return new OperatorToken(operatorMap["+"], pos, lNum, lPos, operatorIdMap["+"]);
+        return new Token(OPERATOR_TOKEN, operatorMap.at("+"), pos, lNum, lPos, operatorIdMap.at("+"));
     }
     if(nextChar == '-')
     {
         nextChar = source.get();
-        return new OperatorToken(operatorMap["-"], pos, lNum, lPos, operatorIdMap["-"]);
+        return new Token(OPERATOR_TOKEN, operatorMap.at("-"), pos, lNum, lPos, operatorIdMap.at("-"));
     }
     if(nextChar == '/')
     {
         nextChar = source.get();
-        return new OperatorToken(operatorMap["/"], pos, lNum, lPos, operatorIdMap["/"]);
+        return new Token(OPERATOR_TOKEN, operatorMap.at("/"), pos, lNum, lPos, operatorIdMap.at("/"));
     }
     if(nextChar == '*')
     {
@@ -196,11 +197,11 @@ Token* Lexer::buildOperator()
         if(nextChar == '*')
         {
             nextChar = source.get();
-            return new OperatorToken(operatorMap["**"], pos, lNum, lPos, operatorIdMap["**"]);
+            return new Token(OPERATOR_TOKEN, operatorMap.at("**"), pos, lNum, lPos, operatorIdMap.at("**"));
         }
         else
         {
-            return new OperatorToken(operatorMap["*"], pos, lNum, lPos, operatorIdMap["*"]);
+            return new Token(OPERATOR_TOKEN, operatorMap.at("*"), pos, lNum, lPos, operatorIdMap.at("*"));
         }
     }
     return nullptr;
@@ -219,8 +220,19 @@ Token* Lexer::buildStringLiteral()
     {
         if(nextChar != '\\' || isNextLiteral)
         {
-            ss<<nextChar;
-            counter++;
+            if(isNextLiteral && nextChar == 'n')
+            {
+                ss<<'\n';
+            }
+            else if(isNextLiteral && nextChar == 't')
+            {
+                ss<<'\t';
+            }
+            else
+            {
+                ss<<nextChar;
+                counter++;
+            }
             isNextLiteral = false;
         }
         else
@@ -239,7 +251,7 @@ Token* Lexer::buildStringLiteral()
     }
     string value = ss.str();
     nextChar = source.get();
-    return new LiteralToken(T_STRING_LIT, pos, lNum, lPos, value);
+    return new Token(LITERAL_TOKEN, T_STRING_LIT, pos, lNum, lPos, value);
 }
 
 
@@ -267,7 +279,7 @@ Token* Lexer::buildNumericLiteral()
         }
         else
         {
-            return new LiteralToken(T_INT_LIT, pos, lNum, lPos, (long long)0);
+            return new Token(LITERAL_TOKEN, T_INT_LIT, pos, lNum, lPos, (long long)0);
         }
     }
     else
@@ -276,11 +288,11 @@ Token* Lexer::buildNumericLiteral()
         nextChar = source.get();
         while(isdigit(nextChar))
         {
+            if(value > (std::numeric_limits<long long>::max() - (double)(nextChar-'0'))/10)
+                throw runtime_error("Numeric literal exceeded limit");
             value *= 10;
             value += (double)(nextChar-'0');
-            nextChar = source.get();
-            if(value < 0)
-                throw runtime_error("Numeric literal exceeded limit");
+            nextChar = source.get();                
         }
         if(isalpha(nextChar))
         {
@@ -292,7 +304,7 @@ Token* Lexer::buildNumericLiteral()
         }
         if(nextChar != '.')
         {
-            return new LiteralToken(T_INT_LIT, pos, lNum, lPos, (long long)value);
+            return new Token(LITERAL_TOKEN, T_INT_LIT, pos, lNum, lPos, (long long)value);
         }
         nextChar = source.get();
     }
@@ -307,16 +319,16 @@ Token* Lexer::buildNumericLiteral()
         return new Token(UNKNOWN_TOKEN, 0, pos, lNum, lPos);
     }
 
-    double multiplier = 0.1;
+    double multiplier = 1;
     while(isdigit(nextChar))
     {
-        value += (double)(nextChar-'0')*multiplier;
-        nextChar = source.get();
-        multiplier *= 0.1;
-        if(multiplier <= __DBL_MIN__)
+        if(multiplier <= __DBL_MIN__ * 10)
         {
             throw runtime_error("Floating point literal exceeded resolution limit");
         }
+        multiplier *= 0.1;
+        value += (double)(nextChar-'0')*multiplier;
+        nextChar = source.get();
     }
     
     if(isalpha(nextChar))
@@ -328,5 +340,5 @@ Token* Lexer::buildNumericLiteral()
         return new Token(UNKNOWN_TOKEN, 0, pos, lNum, lPos);
     }
 
-    return new LiteralToken(T_FLOAT_LIT, pos, lNum, lPos, value);
+    return new Token(LITERAL_TOKEN, T_FLOAT_LIT, pos, lNum, lPos, value);
 }

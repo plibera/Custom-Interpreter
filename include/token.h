@@ -40,7 +40,30 @@ enum KeywordType {
     T_COMMA
 };
 
-extern std::map<std::string, int> keywordMap;
+const std::map<std::string, int> keywordMap{
+    {"if", T_IF},
+    {"else", T_ELSE},
+    {"while", T_WHILE},
+    {"return", T_RETURN},
+    {"or", T_OR},
+    {"and", T_AND},
+    {"not", T_NOT},
+    {"Int", T_INT},
+    {"Float", T_FLOAT},
+    {"Bool", T_BOOL},
+    {"String", T_STRING},
+    {"true", T_TRUE},
+    {"false", T_FALSE},
+    {"Void", T_VOID},
+    {"class", T_CLASS},
+    {"public", T_PUBLIC},
+    {"(", T_LEFTPAREN},
+    {")", T_RIGHTPAREN},
+    {";", T_SEMICOLON},
+    {"{", T_LEFTBRACKET},
+    {"}", T_RIGHTBRACKET},
+    {".", T_ACCESS}
+};
 
 enum OperatorType {
     T_ASSIGN,
@@ -51,8 +74,35 @@ enum OperatorType {
     T_EXP
 };
 
-extern std::map<std::string, int> operatorMap;
-extern std::map<std::string, int> operatorIdMap;
+const std::map<std::string, int> operatorMap{
+    {"=", T_ASSIGN},
+    {"==", T_EQ},
+    {"!=", T_EQ},
+    {"<", T_REL},
+    {">", T_REL},
+    {"<=", T_REL},
+    {">=", T_REL},
+    {"+", T_ADD},
+    {"-", T_ADD},
+    {"*", T_MUL},
+    {"/", T_MUL},
+    {"**", T_EXP},
+};
+
+const std::map<std::string, long long> operatorIdMap{
+    {"=", 0},
+    {"==", 0},
+    {"!=", 1},
+    {"<", 0},
+    {">", 1},
+    {"<=", 2},
+    {">=", 3},
+    {"+", 0},
+    {"-", 1},
+    {"*", 0},
+    {"/", 1},
+    {"**", 0},
+};
 
 enum IdentifierType {
     T_TYPE,
@@ -69,67 +119,28 @@ enum LiteralType {
 
 struct Token
 {
-    int classType;
-    int type;
+    unsigned int classType;
+    unsigned int type;
 
-    int position;
-    int lineNumber;
-    int linePosition;
+    unsigned int position;
+    unsigned int lineNumber;
+    unsigned int linePosition;
 
-    Token(int classType, int type, int pos, int lineNum, int linePos)
-    : classType(classType), type(type), position(pos), lineNumber(lineNum), linePosition(linePos) {}
-    virtual ~Token(){}
-
-    virtual std::string toString();
-};
-
-
-struct KeywordToken
-: Token
-{
-    KeywordToken(int type, int pos, int lineNum, int linePos)
-    :Token(KEYWORD_TOKEN, type, pos, lineNum, linePos) {}
-
-    virtual std::string toString();
-};
-
-
-struct OperatorToken
-: Token
-{
-    int operatorType;
-
-    OperatorToken(int type, int pos, int lineNum, int linePos, int opType)
-    :Token(OPERATOR_TOKEN, type, pos, lineNum, linePos), operatorType(opType) {}
-
-    virtual std::string toString();
-};
-
-struct IdentifierToken
-: Token
-{
-    std::string name;
-
-    IdentifierToken(int type, int pos, int lineNum, int linePos, std::string name)
-    :Token(IDENTIFIER_TOKEN, type, pos, lineNum, linePos), name(name) {}
-
-    virtual std::string toString();
-};
-
-
-struct LiteralToken
-: Token
-{
     std::variant<long long, double, std::string> value;
 
-    LiteralToken(int type, int pos, int lineNum, int linePos, long long value)
-    :Token(LITERAL_TOKEN, type, pos, lineNum, linePos), value(value) {}
+    Token(int classType, int type, int pos, int lineNum, int linePos, long long value = 0)
+    : classType(classType), type(type), position(pos), lineNumber(lineNum), linePosition(linePos), value(value) {}
+    Token(int classType, int type, int pos, int lineNum, int linePos, double value)
+    : classType(classType), type(type), position(pos), lineNumber(lineNum), linePosition(linePos), value(value) {}
+    Token(int classType, int type, int pos, int lineNum, int linePos, std::string value)
+    : classType(classType), type(type), position(pos), lineNumber(lineNum), linePosition(linePos), value(value) {}
 
-    LiteralToken(int type, int pos, int lineNum, int linePos, double value)
-    :Token(LITERAL_TOKEN, type, pos, lineNum, linePos), value(value) {}
+    bool operator==(Token &other);
+    bool operator==(Token &&other);
 
-    LiteralToken(int type, int pos, int lineNum, int linePos, std::string value)
-    :Token(LITERAL_TOKEN, type, pos, lineNum, linePos), value(value) {}
-
-    virtual std::string toString();
+    const std::string toString();
+    const std::string keywordToString();
+    const std::string operatorToString();
+    const std::string identifierToString();
+    const std::string literalToString();
 };

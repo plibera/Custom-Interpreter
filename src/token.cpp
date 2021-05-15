@@ -1,81 +1,70 @@
 #include "token.h"
 
 
+using namespace std;
 
-std::map<std::string, int> keywordMap{
-    {"if", T_IF},
-    {"else", T_ELSE},
-    {"while", T_WHILE},
-    {"return", T_RETURN},
-    {"or", T_OR},
-    {"and", T_AND},
-    {"not", T_NOT},
-    {"Int", T_INT},
-    {"Float", T_FLOAT},
-    {"Bool", T_BOOL},
-    {"String", T_STRING},
-    {"true", T_TRUE},
-    {"false", T_FALSE},
-    {"Void", T_VOID},
-    {"class", T_CLASS},
-    {"public", T_PUBLIC},
-    {"(", T_LEFTPAREN},
-    {")", T_RIGHTPAREN},
-    {";", T_SEMICOLON},
-    {"{", T_LEFTBRACKET},
-    {"}", T_RIGHTBRACKET},
-    {".", T_ACCESS}
-};
-
-
-std::map<std::string, int> operatorMap{
-    {"=", T_ASSIGN},
-    {"==", T_EQ},
-    {"!=", T_EQ},
-    {"<", T_REL},
-    {">", T_REL},
-    {"<=", T_REL},
-    {">=", T_REL},
-    {"+", T_ADD},
-    {"-", T_ADD},
-    {"*", T_MUL},
-    {"/", T_MUL},
-    {"**", T_EXP},
-};
-
-std::map<std::string, int> operatorIdMap{
-    {"=", 0},
-    {"==", 0},
-    {"!=", 1},
-    {"<", 0},
-    {">", 1},
-    {"<=", 2},
-    {">=", 3},
-    {"+", 0},
-    {"-", 1},
-    {"*", 0},
-    {"/", 1},
-    {"**", 0},
-};
-
-
-std::string Token::toString()
+bool Token::operator==(Token &other)
 {
-    std::string s;
+    if(classType != other.classType)
+    {
+        cerr<<"Different token class"<<endl;
+        return false;
+    }
+    if(type != other.type)
+    {
+        cerr<<"Different token type"<<endl;
+        return false;
+    }
+    if(position != other.position)
+    {
+        cerr<<"Different token position: "<<position<<", "<<other.position<<endl;
+        return false;
+    }
+    if(lineNumber != other.lineNumber)
+    {
+        cerr<<"Different token line number"<<endl;
+        return false;
+    }
+    if(linePosition != other.linePosition)
+    {
+        cerr<<"Different token line position"<<endl;
+        return false;
+    }
+    if(value != other.value)
+    {
+        cerr<<"Different token value"<<endl;
+        return false;
+    }
+    return true;
+}
+
+bool Token::operator==(Token &&other)
+{
+    Token t = other;
+    return operator==(t);
+}
+
+const std::string Token::toString()
+{
     switch (classType)
     {
+        case KEYWORD_TOKEN:
+            return keywordToString();
+        case OPERATOR_TOKEN:
+            return operatorToString();
+        case IDENTIFIER_TOKEN:
+            return identifierToString();
+        case LITERAL_TOKEN:
+            return literalToString();
         case UNKNOWN_TOKEN:
-            s += "Unknown";
-            break;
+            return "Unknown";
         case EOT_TOKEN:
-            s += "EOT";
-            break;
+            return "EOT";
     }
-    return s;
 }
 
 
-std::string KeywordToken::toString()
+const std::string Token::keywordToString()
 {
     std::string s = "Keyword<";
     switch(type)
@@ -155,7 +144,7 @@ std::string KeywordToken::toString()
 }
 
 
-std::string OperatorToken::toString()
+const std::string Token::operatorToString()
 {
     std::string s = "Operator<";
     switch(type)
@@ -165,7 +154,7 @@ std::string OperatorToken::toString()
             break;
         case T_EQ:
             s += "Eq(";
-            if(operatorType == 0)
+            if(std::get<long long>(value) == 0)
                 s += "==";
             else
                 s += "!=";
@@ -173,7 +162,7 @@ std::string OperatorToken::toString()
             break;
         case T_REL:
             s += "Rel(";
-            switch(operatorType)
+            switch(std::get<long long>(value))
             {
                 case 0:
                     s += "<";
@@ -192,7 +181,7 @@ std::string OperatorToken::toString()
             break;
         case T_ADD:
             s += "Add(";
-            if(operatorType == 0)
+            if(std::get<long long>(value) == 0)
                 s += "+";
             else
                 s += "-";
@@ -200,7 +189,7 @@ std::string OperatorToken::toString()
             break;
         case T_MUL:
             s += "Mul(";
-            if(operatorType == 0)
+            if(std::get<long long>(value) == 0)
                 s += "*";
             else
                 s += "/";
@@ -217,16 +206,16 @@ std::string OperatorToken::toString()
 
 
 
-std::string IdentifierToken::toString()
+const std::string Token::identifierToString()
 {
     std::string s = "Identifier<";
     switch(type)
     {
         case T_VAR:
-            s += "Variable(" + name + ")";
+            s += "Variable(" + std::get<std::string>(value) + ")";
             break;
         case T_TYPE:
-            s += "Type(" + name + ")";
+            s += "Type(" + std::get<std::string>(value) + ")";
             break;
     }
     s += ">";
@@ -235,7 +224,7 @@ std::string IdentifierToken::toString()
 
 
 
-std::string LiteralToken::toString()
+const std::string Token::literalToString()
 {
     std::string s = "Literal<";
     switch(type)

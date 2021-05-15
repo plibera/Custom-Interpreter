@@ -1,6 +1,8 @@
 #include <iostream>
 #include <gtest/gtest.h>
 
+#include "testLexer.h"
+
 using namespace std;
 
 
