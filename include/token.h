@@ -128,7 +128,7 @@ struct Token
 
     std::variant<long long, double, std::string> value;
 
-    Token(int classType, int type, int pos, int lineNum, int linePos, long long value = 0)
+    Token(int classType = 0, int type = 0, int pos = 0, int lineNum = 0, int linePos = 0, long long value = 0)
     : classType(classType), type(type), position(pos), lineNumber(lineNum), linePosition(linePos), value(value) {}
     Token(int classType, int type, int pos, int lineNum, int linePos, double value)
     : classType(classType), type(type), position(pos), lineNumber(lineNum), linePosition(linePos), value(value) {}

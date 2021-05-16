@@ -4,13 +4,14 @@
 
 #include "lexer.h"
 #include "token.h"
+#include "parser.h"
 
 using namespace std;
 
 
 int main(int argc, char* argv[])
 {
-    Lexer *lexer;
+    Parser *parser;
     std::ifstream file;
     if(argc > 1)
     {
@@ -21,14 +22,14 @@ int main(int argc, char* argv[])
             cerr<<"Could not open file"<<endl;
             return 1;
         }
-        lexer = new Lexer(file);
+        parser = new Parser(file);
     }
     else
     {
-        lexer = new Lexer(std::cin);
+        parser = new Parser(std::cin);
     }
     
-    Token token = lexer->getToken();
+    /*Token token = lexer->getToken();
     int lineNum = 0;
     while(token.classType != EOT_TOKEN)
     {
@@ -41,5 +42,9 @@ int main(int argc, char* argv[])
         token = lexer->getToken();
     }
     cout<<endl;
-    delete lexer;
+    delete lexer;*/
+
+    shared_ptr<Program> program = parser->parse();
+    cout<<"Finished"<<endl;
+    cout<<program->to_string()<<endl;
 }
