@@ -22,19 +22,6 @@ class Parser
     std::shared_ptr<Statement> parseStatement();
     std::shared_ptr<Instruction> parseInstruction();
     std::shared_ptr<Expression> parseExpression();
-    std::shared_ptr<Expression> parseBinaryExpression(std::function<std::shared_ptr<Expression>()> parseChildExpression,
-        std::function<std::shared_ptr<Token>()> parseOperator, bool operationRightToLeft = false);
-
-    std::shared_ptr<Token> parseAssignOperator();
-    std::shared_ptr<Token> parseOrOperator();
-    std::shared_ptr<Token> parseAndOperator();
-    std::shared_ptr<Token> parseEqOperator();
-    std::shared_ptr<Token> parseRelOperator();
-    std::shared_ptr<Token> parseAddOperator();
-    std::shared_ptr<Token> parseMulOperator();
-    std::shared_ptr<Token> parseExpOperator();
-    std::shared_ptr<Token> acceptOperator();
-
     std::shared_ptr<Expression> parseAssignExpression();
     std::shared_ptr<Expression> parseOrExpression();
     std::shared_ptr<Expression> parseAndExpression();
@@ -44,6 +31,10 @@ class Parser
     std::shared_ptr<Expression> parseMulExpression();
     std::shared_ptr<Expression> parseExpExpression();
     std::shared_ptr<Expression> parsePrimaryExpression();
+    std::shared_ptr<Expression> parseBinaryExpression(std::function<std::shared_ptr<Expression>()> parseChildExpression,
+        int operatorClass, int operatorType, bool operationRightToLeft = false);
+
+    std::shared_ptr<Token> acceptOperator();
 
     std::shared_ptr<Expression> parseLiteral();
     std::shared_ptr<Expression> parseIdentifierOrFunctionCall();

@@ -119,7 +119,7 @@ std::shared_ptr<Expression> Parser::parseExpression()
 
 
 shared_ptr<Expression> Parser::parseBinaryExpression(function<shared_ptr<Expression>()> parseChildExpression,
-    function<shared_ptr<Token>()> parseOperator, bool operationRightToLeft)
+    int operatorClass, int operatorType, bool operationRightToLeft)
 {
     cout<<"Parse binary expression"<<endl;
     shared_ptr<BinaryExpression> binaryExpression = make_shared<BinaryExpression>();
@@ -134,8 +134,9 @@ shared_ptr<Expression> Parser::parseBinaryExpression(function<shared_ptr<Express
 
     expressions.push_back(lhs);
 
-    while((currentOperator = parseOperator()))
+    while(currentToken.classType == operatorClass && currentToken.type == operatorType)
     {
+        currentOperator = acceptOperator();
         if(!(rhs = parseChildExpression()))
             throw runtime_error("Expected expression at "+to_string(currentToken.position));
         operators.push_back(currentOperator);
@@ -147,7 +148,10 @@ shared_ptr<Expression> Parser::parseBinaryExpression(function<shared_ptr<Express
 
     if(operationRightToLeft)
     {
-        for(int i = expressions.size() - 2; i >= 0; --i)
+        binaryExpression->lhs = expressions[expressions.size()-2];
+        binaryExpression->op = operators[expressions.size()-2];
+        binaryExpression->rhs = expressions[expressions.size()-1];
+        for(int i = expressions.size() - 3; i >= 0; --i)
         {
             shared_ptr<Expression> prevExpression = make_shared<Expression>();
             prevExpression->expression = binaryExpression;
@@ -186,132 +190,52 @@ std::shared_ptr<Token> Parser::acceptOperator()
     return ret;
 }
 
-std::shared_ptr<Token> Parser::parseAssignOperator()
-{
-    cout<<"Parse assign op"<<endl;
-    if(currentToken.classType == OPERATOR_TOKEN && currentToken.type == T_ASSIGN)
-    {
-        return acceptOperator();
-    }
-    return nullptr;
-}
-
-std::shared_ptr<Token> Parser::parseOrOperator()
-{
-    cout<<"Parse or op"<<endl;
-    if(currentToken.classType == KEYWORD_TOKEN && currentToken.type == T_OR)
-    {
-        return acceptOperator();
-    }
-    return nullptr;
-}
-
-std::shared_ptr<Token> Parser::parseAndOperator()
-{
-    cout<<"Parse and op"<<endl;
-    if(currentToken.classType == KEYWORD_TOKEN && currentToken.type == T_AND)
-    {
-        return acceptOperator();
-    }
-    return nullptr;
-}
-
-std::shared_ptr<Token> Parser::parseEqOperator()
-{
-    cout<<"Parse eq op"<<endl;
-    if(currentToken.classType == OPERATOR_TOKEN && currentToken.type == T_EQ)
-    {
-        return acceptOperator();
-    }
-    return nullptr;
-}
-
-std::shared_ptr<Token> Parser::parseRelOperator()
-{
-    cout<<"Parse rel op"<<endl;
-    if(currentToken.classType == OPERATOR_TOKEN && currentToken.type == T_REL)
-    {
-        return acceptOperator();
-    }
-    return nullptr;
-}
-
-std::shared_ptr<Token> Parser::parseAddOperator()
-{
-    cout<<"Parse add op"<<endl;
-    if(currentToken.classType == OPERATOR_TOKEN && currentToken.type == T_ADD)
-    {
-        return acceptOperator();
-    }
-    return nullptr;
-}
-
-std::shared_ptr<Token> Parser::parseMulOperator()
-{
-    cout<<"Parse mul op"<<endl;
-    if(currentToken.classType == OPERATOR_TOKEN && currentToken.type == T_MUL)
-    {
-        return acceptOperator();
-    }
-    return nullptr;
-}
-
-std::shared_ptr<Token> Parser::parseExpOperator()
-{
-    cout<<"Parse exp op"<<endl;
-    if(currentToken.classType == OPERATOR_TOKEN && currentToken.type == T_EXP)
-    {
-        return acceptOperator();
-    }
-    return nullptr;
-}
-
 std::shared_ptr<Expression> Parser::parseAssignExpression()
 {
     cout<<"Parse assign exp"<<endl;
-    return parseBinaryExpression(bind(&Parser::parseOrExpression, this), bind(&Parser::parseAssignOperator, this), true);
+    return parseBinaryExpression(bind(&Parser::parseOrExpression, this), OPERATOR_TOKEN, T_ASSIGN, true);
 }
 
 std::shared_ptr<Expression> Parser::parseOrExpression()
 {
     cout<<"Parse or exp"<<endl;
-    return parseBinaryExpression(bind(&Parser::parseAndExpression, this), bind(&Parser::parseOrOperator, this));
+    return parseBinaryExpression(bind(&Parser::parseAndExpression, this), KEYWORD_TOKEN, T_OR);
 }
 
 std::shared_ptr<Expression> Parser::parseAndExpression()
 {
     cout<<"Parse and exp"<<endl;
-    return parseBinaryExpression(bind(&Parser::parseEqExpression, this), bind(&Parser::parseAndOperator, this));
+    return parseBinaryExpression(bind(&Parser::parseEqExpression, this), KEYWORD_TOKEN, T_AND);
 }
 
 std::shared_ptr<Expression> Parser::parseEqExpression()
 {
     cout<<"Parse eq exp"<<endl;
-    return parseBinaryExpression(bind(&Parser::parseRelExpression, this), bind(&Parser::parseEqOperator, this));
+    return parseBinaryExpression(bind(&Parser::parseRelExpression, this), OPERATOR_TOKEN, T_EQ);
 }
 
 std::shared_ptr<Expression> Parser::parseRelExpression()
 {
     cout<<"Parse rel exp"<<endl;
-    return parseBinaryExpression(bind(&Parser::parseAddExpression, this), bind(&Parser::parseRelOperator, this));
+    return parseBinaryExpression(bind(&Parser::parseAddExpression, this), OPERATOR_TOKEN, T_REL);
 }
 
 std::shared_ptr<Expression> Parser::parseAddExpression()
 {
     cout<<"Parse add exp"<<endl;
-    return parseBinaryExpression(bind(&Parser::parseMulExpression, this), bind(&Parser::parseAddOperator, this));
+    return parseBinaryExpression(bind(&Parser::parseMulExpression, this), OPERATOR_TOKEN, T_ADD);
 }
 
 std::shared_ptr<Expression> Parser::parseMulExpression()
 {
     cout<<"Parse mul exp"<<endl;
-    return parseBinaryExpression(bind(&Parser::parseExpExpression, this), bind(&Parser::parseMulOperator, this));
+    return parseBinaryExpression(bind(&Parser::parseExpExpression, this), OPERATOR_TOKEN, T_MUL);
 }
 
 std::shared_ptr<Expression> Parser::parseExpExpression()
 {
     cout<<"Parse exp exp"<<endl;
-    return parseBinaryExpression(bind(&Parser::parsePrimaryExpression, this), bind(&Parser::parseExpOperator, this), true);
+    return parseBinaryExpression(bind(&Parser::parsePrimaryExpression, this), OPERATOR_TOKEN, T_EXP, true);
 }
 
 std::shared_ptr<Expression> Parser::parsePrimaryExpression()
@@ -322,7 +246,7 @@ std::shared_ptr<Expression> Parser::parsePrimaryExpression()
     {
         getNextToken();
         expression = parseAssignExpression();
-        if(currentToken.classType == KEYWORD_TOKEN && currentToken.type == T_RIGHTPAREN)
+        if(!(currentToken.classType == KEYWORD_TOKEN && currentToken.type == T_RIGHTPAREN))
             throw runtime_error("')' expected");
         getNextToken();
         return expression;

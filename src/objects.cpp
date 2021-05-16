@@ -2,13 +2,23 @@
 
 using namespace std;
 
-std::string Program::to_string(int indent)
+
+std::string makeIndent(int indent)
 {
-    cout<<"Program"<<endl;
     std::stringstream ss;
     for(int i = 0; i < indent; ++i)
-        ss<<" ";
-    ss<<"Program"<<endl;
+        if(i%4 == 0)
+            ss<<"|";
+        else
+            ss<<" ";
+    return ss.str();
+}
+
+std::string Program::to_string(int indent)
+{
+    std::stringstream ss;
+    ss<<makeIndent(indent);
+    ss<<"Program:"<<endl;
     for(auto element : program)
     {
         if(element.index() == 0)
@@ -27,9 +37,8 @@ std::string Program::to_string(int indent)
 std::string Definition::to_string(int indent)
 {
     std::stringstream ss;
-    for(int i = 0; i < indent; ++i)
-        ss<<" ";
-    ss<<"Definition"<<endl;
+    ss<<makeIndent(indent);
+    ss<<"Definition:"<<endl;
     if(definition.index() == 0)
     {
         ss<<std::get<std::shared_ptr<FunDefinition>>(definition)->to_string(indent+4);
@@ -43,11 +52,9 @@ std::string Definition::to_string(int indent)
 
 std::string Statement::to_string(int indent)
 {
-    cout<<"Statement"<<endl;
     std::stringstream ss;
-    for(int i = 0; i < indent; ++i)
-        ss<<" ";
-    ss<<"Statement"<<endl;
+    ss<<makeIndent(indent);
+    ss<<"Statement:"<<endl;
     for(auto instruction : instructions)
     {
         ss<<instruction->to_string(indent+4);
@@ -58,8 +65,7 @@ std::string Statement::to_string(int indent)
 std::string FunDefinition::to_string(int indent)
 {
     std::stringstream ss;
-    for(int i = 0; i < indent; ++i)
-        ss<<" ";
+    ss<<makeIndent(indent);
     ss<<"Function definition: "<<type->toString()<<" "<<identifier<<endl;
     for(auto expression : arguments)
     {
@@ -73,8 +79,7 @@ std::string FunDefinition::to_string(int indent)
 std::string TypeDefinition::to_string(int indent)
 {
     std::stringstream ss;
-    for(int i = 0; i < indent; ++i)
-        ss<<" ";
+    ss<<makeIndent(indent);
     ss<<"Type definition: "<<type->toString()<<endl;
     for(auto expression : expressions)
     {
@@ -90,14 +95,11 @@ std::string TypeDefinition::to_string(int indent)
 
 std::string BinaryExpression::to_string(int indent)
 {
-    cout<<"Binary expression"<<endl;
     std::stringstream ss;
-    for(int i = 0; i < indent; ++i)
-        ss<<" ";
+    ss<<makeIndent(indent);
     ss<<"Binary expression: "<<endl;
     ss<<lhs->to_string(indent+4);
-    for(int i = 0; i < indent; ++i)
-        ss<<" ";
+    ss<<makeIndent(indent+4);
     ss<<op->toString()<<endl;
     ss<<rhs->to_string(indent+4);
     return ss.str();
@@ -106,8 +108,7 @@ std::string BinaryExpression::to_string(int indent)
 std::string FunCall::to_string(int indent)
 {
     std::stringstream ss;
-    for(int i = 0; i < indent; ++i)
-        ss<<" ";
+    ss<<makeIndent(indent);
     ss<<"Function call: "<<identifier<<" arguments:"<<endl;
     for(auto argument : arguments)
     {
@@ -118,10 +119,8 @@ std::string FunCall::to_string(int indent)
 
 std::string Expression::to_string(int indent)
 {
-    cout<<"Expression"<<endl;
     std::stringstream ss;
-    for(int i = 0; i < indent; ++i)
-        ss<<" ";
+    ss<<makeIndent(indent);
     ss<<"Expression: "<<endl;
     switch(expression.index())
     {
@@ -146,10 +145,8 @@ std::string Expression::to_string(int indent)
 
 std::string Literal::to_string(int indent)
 {
-    cout<<"Literal"<<endl;
     std::stringstream ss;
-    for(int i = 0; i < indent; ++i)
-        ss<<" ";
+    ss<<makeIndent(indent);
     ss<<"Literal: "<<literal->toString()<<endl;
     return ss.str();
 }
@@ -157,8 +154,7 @@ std::string Literal::to_string(int indent)
 std::string Identifier::to_string(int indent)
 {
     std::stringstream ss;
-    for(int i = 0; i < indent; ++i)
-        ss<<" ";
+    ss<<makeIndent(indent);
     if(isTypeMember)
         ss<<"Identifier: Type: "<<type->toString()<<" Member: "<<identifier->toString()<<endl;
     else
@@ -169,8 +165,7 @@ std::string Identifier::to_string(int indent)
 std::string Instruction::to_string(int indent)
 {
     std::stringstream ss;
-    for(int i = 0; i < indent; ++i)
-        ss<<" ";
+    ss<<makeIndent(indent);
     ss<<"Instruction: "<<endl;
     switch(instruction.index())
     {
@@ -193,8 +188,7 @@ std::string Instruction::to_string(int indent)
 std::string IfStatement::to_string(int indent)
 {
     std::stringstream ss;
-    for(int i = 0; i < indent; ++i)
-        ss<<" ";
+    ss<<makeIndent(indent);
     ss<<"If statement: condition, if true, if false:"<<endl;
     ss<<condition->to_string(indent+4);
     ss<<statementTrue->to_string(indent+4);
@@ -205,8 +199,7 @@ std::string IfStatement::to_string(int indent)
 std::string WhileStatement::to_string(int indent)
 {
     std::stringstream ss;
-    for(int i = 0; i < indent; ++i)
-        ss<<" ";
+    ss<<makeIndent(indent);
     ss<<"While statement: condition, statement:"<<endl;
     ss<<condition->to_string(indent+4);
     ss<<statement->to_string(indent+4);
@@ -216,8 +209,7 @@ std::string WhileStatement::to_string(int indent)
 std::string ReturnStatement::to_string(int indent)
 {
     std::stringstream ss;
-    for(int i = 0; i < indent; ++i)
-        ss<<" ";
+    ss<<makeIndent(indent);
     ss<<"Return statement:"<<endl;
     ss<<expression->to_string(indent+4);
     return ss.str();
@@ -226,8 +218,7 @@ std::string ReturnStatement::to_string(int indent)
 std::string Declaration::to_string(int indent)
 {
     std::stringstream ss;
-    for(int i = 0; i < indent; ++i)
-        ss<<" ";
+    ss<<makeIndent(indent);
     ss<<"Declaration: "<<type->toString()<<" "<<identifier->toString()<<endl;
     return ss.str();
 }
