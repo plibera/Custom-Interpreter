@@ -44,6 +44,7 @@ class Parser
     std::shared_ptr<ReturnStatement> parseReturnStatement();
     void parseSemicolon();
     bool parseComma();
+    bool parsePublicKeyword();
 
     std::shared_ptr<Definition> parseIdentifierOrFunctionDefinition(bool forceIdentifier = false);
     std::shared_ptr<TypeDefinition> parseTypeDefinition();

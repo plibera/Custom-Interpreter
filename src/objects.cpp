@@ -72,9 +72,9 @@ std::string FunDefinition::to_string(int indent)
     std::stringstream ss;
     ss<<makeIndent(indent);
     if(statement)
-        ss<<"Function definition: "<<type->toString()<<" "<<identifier<<endl;
+        ss<<"Function definition: "<<(isPublic?"public ":"private ")<<type->toString()<<" "<<identifier<<endl;
     else
-        ss<<"Function declaration: "<<type->toString()<<" "<<identifier<<endl;
+        ss<<"Function declaration: "<<(isPublic?"public ":"private ")<<type->toString()<<" "<<identifier<<endl;
     for(auto expression : arguments)
     {
         ss<<expression->to_string(indent+4);
@@ -191,6 +191,9 @@ std::string Instruction::to_string(int indent)
         case 3:
             ss<<get<shared_ptr<ReturnStatement>>(instruction)->to_string(indent+4);
             break;
+        case 4:
+            ss<<get<shared_ptr<VariableDeclaration>>(instruction)->to_string(indent+4);
+            break;
     }
     return ss.str();
 }
@@ -232,6 +235,8 @@ std::string VariableDeclaration::to_string(int indent)
 {
     std::stringstream ss;
     ss<<makeIndent(indent);
-    ss<<"VariableDeclaration: "<<type->toString()<<" "<<identifier<<endl;
+    ss<<"VariableDeclaration: "<<(isPublic?"public ":"private ")<<type->toString()<<" "<<identifier<<endl;
+    if(expression)
+        ss<<expression->to_string(indent+4);
     return ss.str();
 }

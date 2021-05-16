@@ -53,6 +53,9 @@ struct FunDefinition
     std::string identifier;
     std::vector<std::shared_ptr<VariableDeclaration>> arguments;
     std::shared_ptr<Statement> statement;
+    bool isPublic;
+
+    FunDefinition(bool isPublic = true) : isPublic(isPublic) {}
 
     std::string to_string(int indent = 0);
 };
@@ -114,7 +117,8 @@ struct Instruction
     std::variant<std::shared_ptr<Expression>,
                  std::shared_ptr<IfStatement>,
                  std::shared_ptr<WhileStatement>,
-                 std::shared_ptr<ReturnStatement>> instruction;
+                 std::shared_ptr<ReturnStatement>,
+                 std::shared_ptr<VariableDeclaration>> instruction;
 
     std::string to_string(int indent = 0);
 };
@@ -147,6 +151,10 @@ struct VariableDeclaration
 {
     std::shared_ptr<Token> type;
     std::string identifier;
+    std::shared_ptr<Expression> expression;
+    bool isPublic;
+
+    VariableDeclaration(bool isPublic = true) : isPublic(isPublic) {}
 
     std::string to_string(int indent = 0);
 };
