@@ -39,6 +39,15 @@ class Parser
     std::shared_ptr<Expression> parseLiteral();
     std::shared_ptr<Expression> parseIdentifierOrFunctionCall();
 
+    std::shared_ptr<IfStatement> parseIfStatement();
+    std::shared_ptr<WhileStatement> parseWhileStatement();
+    std::shared_ptr<ReturnStatement> parseReturnStatement();
+    void parseSemicolon();
+    bool parseComma();
+
+    std::shared_ptr<Definition> parseIdentifierOrFunctionDefinition(bool forceIdentifier = false);
+    std::shared_ptr<TypeDefinition> parseTypeDefinition();
+
 
 
 

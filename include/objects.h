@@ -22,7 +22,7 @@ struct Instruction;
 struct IfStatement;
 struct WhileStatement;
 struct ReturnStatement;
-struct Declaration;
+struct VariableDeclaration;
 
 
 struct Program
@@ -35,7 +35,7 @@ struct Program
 
 struct Definition
 {
-    std::variant<std::shared_ptr<FunDefinition>, std::shared_ptr<TypeDefinition>> definition;
+    std::variant<std::shared_ptr<FunDefinition>, std::shared_ptr<TypeDefinition>, std::shared_ptr<VariableDeclaration>> definition;
 
     std::string to_string(int indent = 0);
 };
@@ -51,7 +51,7 @@ struct FunDefinition
 {
     std::shared_ptr<Token> type;
     std::string identifier;
-    std::vector<std::shared_ptr<Expression>> arguments;
+    std::vector<std::shared_ptr<VariableDeclaration>> arguments;
     std::shared_ptr<Statement> statement;
 
     std::string to_string(int indent = 0);
@@ -60,7 +60,7 @@ struct FunDefinition
 struct TypeDefinition
 {
     std::shared_ptr<Token> type;
-    std::vector<std::shared_ptr<Expression>> expressions;
+    std::vector<std::shared_ptr<VariableDeclaration>> variables;
     std::vector<std::shared_ptr<FunDefinition>> functions;
 
     std::string to_string(int indent = 0);
@@ -88,7 +88,7 @@ struct FunCall
 
 struct Expression
 {
-    std::variant<std::shared_ptr<BinaryExpression>, std::shared_ptr<FunCall>, std::shared_ptr<Literal>, std::shared_ptr<Identifier>, std::shared_ptr<Declaration>> expression;
+    std::variant<std::shared_ptr<BinaryExpression>, std::shared_ptr<FunCall>, std::shared_ptr<Literal>, std::shared_ptr<Identifier>> expression;
 
     std::string to_string(int indent = 0);
 };
@@ -143,10 +143,10 @@ struct ReturnStatement
     std::string to_string(int indent = 0);
 };
 
-struct Declaration
+struct VariableDeclaration
 {
     std::shared_ptr<Token> type;
-    std::shared_ptr<Token> identifier;
+    std::string identifier;
 
     std::string to_string(int indent = 0);
 };

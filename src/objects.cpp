@@ -43,10 +43,15 @@ std::string Definition::to_string(int indent)
     {
         ss<<std::get<std::shared_ptr<FunDefinition>>(definition)->to_string(indent+4);
     }
-    else
+    else if(definition.index() == 1)
     {
         ss<<std::get<std::shared_ptr<TypeDefinition>>(definition)->to_string(indent+4);
     }
+    else
+    {
+        ss<<std::get<std::shared_ptr<VariableDeclaration>>(definition)->to_string(indent+4);
+    }
+    
     return ss.str();
 }
 
@@ -66,12 +71,16 @@ std::string FunDefinition::to_string(int indent)
 {
     std::stringstream ss;
     ss<<makeIndent(indent);
-    ss<<"Function definition: "<<type->toString()<<" "<<identifier<<endl;
+    if(statement)
+        ss<<"Function definition: "<<type->toString()<<" "<<identifier<<endl;
+    else
+        ss<<"Function declaration: "<<type->toString()<<" "<<identifier<<endl;
     for(auto expression : arguments)
     {
         ss<<expression->to_string(indent+4);
     }
-    ss<<statement->to_string(indent+4);
+    if(statement)
+        ss<<statement->to_string(indent+4);
     return ss.str();
 }
 
@@ -81,7 +90,7 @@ std::string TypeDefinition::to_string(int indent)
     std::stringstream ss;
     ss<<makeIndent(indent);
     ss<<"Type definition: "<<type->toString()<<endl;
-    for(auto expression : expressions)
+    for(auto expression : variables)
     {
         ss<<expression->to_string(indent+4);
     }
@@ -136,9 +145,6 @@ std::string Expression::to_string(int indent)
         case 3:
             ss<<get<shared_ptr<Identifier>>(expression)->to_string(indent+4);
             break;
-        case 4:
-            ss<<get<shared_ptr<Declaration>>(expression)->to_string(indent+4);
-            break;
     }
     return ss.str();
 }
@@ -192,7 +198,10 @@ std::string IfStatement::to_string(int indent)
     ss<<"If statement: condition, if true, if false:"<<endl;
     ss<<condition->to_string(indent+4);
     ss<<statementTrue->to_string(indent+4);
-    ss<<statementFalse->to_string(indent+4);
+    if(statementFalse)
+        ss<<statementFalse->to_string(indent+4);
+    else
+        ss<<makeIndent(indent+4)<<"Null"<<endl;
     return ss.str();
 }
 
@@ -215,10 +224,10 @@ std::string ReturnStatement::to_string(int indent)
     return ss.str();
 }
 
-std::string Declaration::to_string(int indent)
+std::string VariableDeclaration::to_string(int indent)
 {
     std::stringstream ss;
     ss<<makeIndent(indent);
-    ss<<"Declaration: "<<type->toString()<<" "<<identifier->toString()<<endl;
+    ss<<"VariableDeclaration: "<<type->toString()<<" "<<identifier<<endl;
     return ss.str();
 }
