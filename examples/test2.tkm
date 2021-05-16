@@ -1,8 +1,10 @@
-Int a = 5;
+Int a;
+a = 5;
 {
     a = 7;
     # Zmienna b widoczna tylko w tym bloku
-    Int b = 1;
+    Int b;
+    b = 1;
 }
 println(a); # Wypisane 7
 println(b); # Blad

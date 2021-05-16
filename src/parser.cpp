@@ -285,7 +285,70 @@ std::shared_ptr<Expression> Parser::parseLiteral()
 std::shared_ptr<Expression> Parser::parseIdentifierOrFunctionCall()
 {
     cout<<"Parse identifier or function call"<<endl;
-    return nullptr;
+    if(!(currentToken.classType == IDENTIFIER_TOKEN && currentToken.type == T_VAR))
+        return nullptr;
+    
+    string object;
+    string idStr = get<string>(currentToken.value);
+    getNextToken();
+
+    if((currentToken.classType == KEYWORD_TOKEN && currentToken.type == T_ACCESS))
+    {
+        object = idStr;
+        idStr = "";
+        getNextToken();
+
+        if(!(currentToken.classType == IDENTIFIER_TOKEN && currentToken.type == T_VAR))
+            throw runtime_error("Expected identifier after '.': "+to_string(currentToken.position));
+
+        idStr = get<string>(currentToken.value);
+        getNextToken();
+    }
+
+    if(!(currentToken.classType == KEYWORD_TOKEN && currentToken.type == T_LEFTPAREN))
+    {
+        //Parse identifier
+        shared_ptr<Identifier> identifier = make_shared<Identifier>();
+        identifier->object = object;
+        identifier->identifier = idStr;
+        shared_ptr<Expression> expression = make_shared<Expression>();
+        expression->expression = identifier;
+        return expression;
+    }
+
+    getNextToken();
+
+    //Parse function call
+
+    shared_ptr<FunCall> funCall = make_shared<FunCall>();
+    funCall->object = object;
+    funCall->identifier = idStr;
+    shared_ptr<Expression> expression;
+    bool firstArgument = true;
+    do
+    {
+        if(!(expression = parseExpression()))
+        {
+            if(firstArgument)
+            {
+                break;
+            }
+            else
+            {
+                throw runtime_error("Expected expression after ',': "+to_string(currentToken.position));
+            }
+        }
+        firstArgument = false;
+        funCall->arguments.push_back(expression);
+    } while(parseComma());
+
+    if(!(currentToken.classType == KEYWORD_TOKEN && currentToken.type == T_RIGHTPAREN))
+        throw runtime_error("Expected ')': "+to_string(currentToken.position));
+    getNextToken();
+
+    expression = make_shared<Expression>();
+    expression->expression = funCall;
+    return expression;
 }
 
 std::shared_ptr<IfStatement> Parser::parseIfStatement()
@@ -404,10 +467,21 @@ std::shared_ptr<Definition> Parser::parseIdentifierOrFunctionDefinition(bool for
     funDefinition->identifier = identifier;
     shared_ptr<Definition> definition;
     shared_ptr<VariableDeclaration> variableDeclaration;
+    bool firstArgument = true;
     do
     {
         if(!(definition = parseIdentifierOrFunctionDefinition(true)))
-            break;
+        {
+            if(firstArgument)
+            {
+                break;
+            }
+            else
+            {
+                throw runtime_error("Expected parameter declaration after ',': "+to_string(currentToken.position));
+            }
+        }
+        firstArgument = false;
         variableDeclaration = get<shared_ptr<VariableDeclaration>>(definition->definition);
         funDefinition->arguments.push_back(variableDeclaration);
     } while(parseComma());

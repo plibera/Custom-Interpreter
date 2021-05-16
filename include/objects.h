@@ -80,6 +80,7 @@ struct BinaryExpression
 
 struct FunCall
 {
+    std::string object;
     std::string identifier;
     std::vector<std::shared_ptr<Expression>> arguments;
 
@@ -102,9 +103,8 @@ struct Literal
 
 struct Identifier
 {
-    std::shared_ptr<Token> type;
-    std::shared_ptr<Token> identifier;
-    bool isTypeMember;
+    std::string object;
+    std::string identifier;
 
     std::string to_string(int indent = 0);
 };

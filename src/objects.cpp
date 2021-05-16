@@ -118,10 +118,14 @@ std::string FunCall::to_string(int indent)
 {
     std::stringstream ss;
     ss<<makeIndent(indent);
-    ss<<"Function call: "<<identifier<<" arguments:"<<endl;
+    if(object != "")
+        ss<<"Function call: Object: "<<object<<" Member: "<<identifier;
+    else
+        ss<<"Identifier: "<<identifier;
+    ss<<"  Arguments: "<<arguments.size()<<endl;
     for(auto argument : arguments)
     {
-        argument->to_string(indent+4);
+        ss<<argument->to_string(indent+4);
     }
     return ss.str();
 }
@@ -161,10 +165,10 @@ std::string Identifier::to_string(int indent)
 {
     std::stringstream ss;
     ss<<makeIndent(indent);
-    if(isTypeMember)
-        ss<<"Identifier: Type: "<<type->toString()<<" Member: "<<identifier->toString()<<endl;
+    if(object != "")
+        ss<<"Identifier: Object: "<<object<<" Member: "<<identifier<<endl;
     else
-        ss<<"Identifier: "<<identifier->toString()<<endl;
+        ss<<"Identifier: "<<identifier<<endl;
     return ss.str();
 }
 
