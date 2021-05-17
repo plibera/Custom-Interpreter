@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 
 #include "testLexer.h"
+#include "testParser.h"
 
 using namespace std;
 

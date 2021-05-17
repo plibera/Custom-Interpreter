@@ -4,6 +4,7 @@
 #include <string>
 #include <sstream>
 #include <functional>
+#include <queue>
 
 
 #include "token.h"
@@ -49,14 +50,15 @@ class Parser
     std::shared_ptr<Definition> parseIdentifierOrFunctionDefinition(bool forceIdentifier = false);
     std::shared_ptr<TypeDefinition> parseTypeDefinition();
 
-
-
-
     void getNextToken();
 
+    bool inTestMode;
+    std::queue<Token> testTokens;
 
 public:
-    Parser(std::istream& stream) : lexer(stream) {}
+    Parser(std::istream& stream, bool testMode = false) : lexer(stream), inTestMode(testMode) {}
 
     std::shared_ptr<Program> parse();
+
+    void addTestToken(Token token);
 };

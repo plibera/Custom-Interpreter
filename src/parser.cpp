@@ -6,11 +6,29 @@ using namespace std;
 void Parser::getNextToken() {
     if(EOTReceived)
         throw runtime_error("EOT already processed");
-    currentToken = lexer.getToken();
+
+    if(!inTestMode)
+        currentToken = lexer.getToken();
+    else
+    {
+        if(testTokens.empty())
+            currentToken = Token(EOT_TOKEN);
+        else
+        {
+            currentToken = testTokens.front();
+            testTokens.pop();
+        }
+    }
+    
     if(currentToken.classType == EOT_TOKEN)
     {
         EOTReceived = true;
     }
+}
+
+void Parser::addTestToken(Token token)
+{
+    testTokens.push(token);
 }
 
 std::shared_ptr<Program> Parser::parse()
