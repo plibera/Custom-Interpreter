@@ -1,0 +1,29 @@
+Int int1 = 5;
+Float float1 = 3.2;
+Bool bool1 = true;
+String str1 = "String";
+
+# Rzutowanie typow liczbowych
+Int int2 = int(5.2);
+Int int3 = int(true);     # true rzutowany na int daje 1, false daje 0
+Float float2 = float(5);
+Float float3 = float(true); # Analogicznie do rzutowania na int
+Bool bool2 = bool(1);       # Wartosc rozna od 0 rzutowana na true, 0 na false 
+Bool bool3 = bool(1.1);    # Wartosc rozna od 0 rzutowana na true, 0 na false
+
+# Rzutowanie do string przez wbudowana funkcje str()
+String str2 = str(int1);
+String str3 = str(float1);
+String str4 = str(bool1);
+
+# Dowolnosc znakow w stringach
+String str5 = "x
+y	\"	zz\nzz\n";
+
+# Operacje matematyczne
+Int a = (int1+int2) * int(float1+float2);
+Int b = int(bool1 + bool2);
+Int c = (a+b)**2;
+
+# Konkatenacja lancuchow znakow
+String str5 = str1 + str2 + str(c);

@@ -121,7 +121,7 @@ std::string FunCall::to_string(int indent)
     if(object != "")
         ss<<"Function call: Object: "<<object<<" Member: "<<identifier;
     else
-        ss<<"Identifier: "<<identifier;
+        ss<<"Function call: Identifier: "<<identifier;
     ss<<"  Arguments: "<<arguments.size()<<endl;
     for(auto argument : arguments)
     {

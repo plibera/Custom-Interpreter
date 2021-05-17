@@ -1,0 +1,31 @@
+Program:
+|   Definition:
+|   |   VariableDeclaration: public Keyword<int> a
+|   |   |   Expression: 
+|   |   |   |   Literal: Literal<Integer(5)>
+|   Statement:
+|   |   Instruction: 
+|   |   |   Expression: 
+|   |   |   |   Binary expression: 
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Identifier: a
+|   |   |   |   |   Operator<Assign>
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Literal: Literal<Integer(7)>
+|   |   Instruction: 
+|   |   |   VariableDeclaration: public Keyword<int> b
+|   |   |   |   Expression: 
+|   |   |   |   |   Literal: Literal<Integer(1)>
+|   Statement:
+|   |   Instruction: 
+|   |   |   Expression: 
+|   |   |   |   Function call: Identifier: println  Arguments: 1
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Identifier: a
+|   Statement:
+|   |   Instruction: 
+|   |   |   Expression: 
+|   |   |   |   Function call: Identifier: println  Arguments: 1
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Identifier: b
+

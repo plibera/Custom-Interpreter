@@ -1,0 +1,18 @@
+Int a = 5;
+while(a > 0)
+{
+    if(a == 3) {
+        println("A jest rowne 3");
+    }
+    else
+    {
+        if(a == 2) {
+            println("A nie jest rowne 3, ale jest rowne 2");
+        }
+        else {
+            println("A nie jest rowne ani 3, ani 2");
+        }
+    }
+    
+    a = a - 1;
+}

@@ -1,0 +1,67 @@
+Program:
+|   Definition:
+|   |   VariableDeclaration: public Keyword<int> a
+|   |   |   Expression: 
+|   |   |   |   Literal: Literal<Integer(5)>
+|   Statement:
+|   |   Instruction: 
+|   |   |   While statement: condition, statement:
+|   |   |   |   Expression: 
+|   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Identifier: a
+|   |   |   |   |   |   Operator<Rel(>)>
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Literal: Literal<Integer(0)>
+|   |   |   |   Statement:
+|   |   |   |   |   Instruction: 
+|   |   |   |   |   |   If statement: condition, if true, if false:
+|   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   Identifier: a
+|   |   |   |   |   |   |   |   |   Operator<Eq(==)>
+|   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   Literal: Literal<Integer(3)>
+|   |   |   |   |   |   |   Statement:
+|   |   |   |   |   |   |   |   Instruction: 
+|   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   Function call: Identifier: println  Arguments: 1
+|   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   Literal: Literal<String(A jest rowne 3)>
+|   |   |   |   |   |   |   Statement:
+|   |   |   |   |   |   |   |   Instruction: 
+|   |   |   |   |   |   |   |   |   If statement: condition, if true, if false:
+|   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   Identifier: a
+|   |   |   |   |   |   |   |   |   |   |   |   Operator<Eq(==)>
+|   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   Literal: Literal<Integer(2)>
+|   |   |   |   |   |   |   |   |   |   Statement:
+|   |   |   |   |   |   |   |   |   |   |   Instruction: 
+|   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   Function call: Identifier: println  Arguments: 1
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Literal: Literal<String(A nie jest rowne 3, ale jest rowne 2)>
+|   |   |   |   |   |   |   |   |   |   Statement:
+|   |   |   |   |   |   |   |   |   |   |   Instruction: 
+|   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   Function call: Identifier: println  Arguments: 1
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Literal: Literal<String(A nie jest rowne ani 3, ani 2)>
+|   |   |   |   |   Instruction: 
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Identifier: a
+|   |   |   |   |   |   |   |   Operator<Assign>
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   Identifier: a
+|   |   |   |   |   |   |   |   |   |   Operator<Add(-)>
+|   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   Literal: Literal<Integer(1)>
+

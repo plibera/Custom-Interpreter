@@ -45,6 +45,5 @@ int main(int argc, char* argv[])
     delete lexer;*/
 
     shared_ptr<Program> program = parser->parse();
-    cout<<"Finished"<<endl;
     cout<<program->to_string()<<endl;
 }

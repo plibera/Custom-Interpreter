@@ -1,0 +1,141 @@
+Program:
+|   Definition:
+|   |   VariableDeclaration: public Keyword<int> int1
+|   |   |   Expression: 
+|   |   |   |   Literal: Literal<Integer(5)>
+|   Definition:
+|   |   VariableDeclaration: public Keyword<float> float1
+|   |   |   Expression: 
+|   |   |   |   Literal: Literal<Float(3.200000)>
+|   Definition:
+|   |   VariableDeclaration: public Keyword<bool> bool1
+|   |   |   Expression: 
+|   |   |   |   Literal: Keyword<true>
+|   Definition:
+|   |   VariableDeclaration: public Keyword<string> str1
+|   |   |   Expression: 
+|   |   |   |   Literal: Literal<String(String)>
+|   Definition:
+|   |   VariableDeclaration: public Keyword<int> int2
+|   |   |   Expression: 
+|   |   |   |   Function call: Identifier: int  Arguments: 1
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Literal: Literal<Float(5.200000)>
+|   Definition:
+|   |   VariableDeclaration: public Keyword<int> int3
+|   |   |   Expression: 
+|   |   |   |   Function call: Identifier: int  Arguments: 1
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Literal: Keyword<true>
+|   Definition:
+|   |   VariableDeclaration: public Keyword<float> float2
+|   |   |   Expression: 
+|   |   |   |   Function call: Identifier: float  Arguments: 1
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Literal: Literal<Integer(5)>
+|   Definition:
+|   |   VariableDeclaration: public Keyword<float> float3
+|   |   |   Expression: 
+|   |   |   |   Function call: Identifier: float  Arguments: 1
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Literal: Keyword<true>
+|   Definition:
+|   |   VariableDeclaration: public Keyword<bool> bool2
+|   |   |   Expression: 
+|   |   |   |   Function call: Identifier: bool  Arguments: 1
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Literal: Literal<Integer(1)>
+|   Definition:
+|   |   VariableDeclaration: public Keyword<bool> bool3
+|   |   |   Expression: 
+|   |   |   |   Function call: Identifier: bool  Arguments: 1
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Literal: Literal<Float(1.100000)>
+|   Definition:
+|   |   VariableDeclaration: public Keyword<string> str2
+|   |   |   Expression: 
+|   |   |   |   Function call: Identifier: str  Arguments: 1
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Identifier: int1
+|   Definition:
+|   |   VariableDeclaration: public Keyword<string> str3
+|   |   |   Expression: 
+|   |   |   |   Function call: Identifier: str  Arguments: 1
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Identifier: float1
+|   Definition:
+|   |   VariableDeclaration: public Keyword<string> str4
+|   |   |   Expression: 
+|   |   |   |   Function call: Identifier: str  Arguments: 1
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Identifier: bool1
+|   Definition:
+|   |   VariableDeclaration: public Keyword<string> str5
+|   |   |   Expression: 
+|   |   |   |   Literal: Literal<String(x
+y	"	zz
+zz
+)>
+|   Definition:
+|   |   VariableDeclaration: public Keyword<int> a
+|   |   |   Expression: 
+|   |   |   |   Binary expression: 
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   Identifier: int1
+|   |   |   |   |   |   |   Operator<Add(+)>
+|   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   Identifier: int2
+|   |   |   |   |   Operator<Mul(*)>
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Function call: Identifier: int  Arguments: 1
+|   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   Identifier: float1
+|   |   |   |   |   |   |   |   |   Operator<Add(+)>
+|   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   Identifier: float2
+|   Definition:
+|   |   VariableDeclaration: public Keyword<int> b
+|   |   |   Expression: 
+|   |   |   |   Function call: Identifier: int  Arguments: 1
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   Identifier: bool1
+|   |   |   |   |   |   |   Operator<Add(+)>
+|   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   Identifier: bool2
+|   Definition:
+|   |   VariableDeclaration: public Keyword<int> c
+|   |   |   Expression: 
+|   |   |   |   Binary expression: 
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   Identifier: a
+|   |   |   |   |   |   |   Operator<Add(+)>
+|   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   Identifier: b
+|   |   |   |   |   Operator<Exp>
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Literal: Literal<Integer(2)>
+|   Definition:
+|   |   VariableDeclaration: public Keyword<string> str5
+|   |   |   Expression: 
+|   |   |   |   Binary expression: 
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   Identifier: str1
+|   |   |   |   |   |   |   Operator<Add(+)>
+|   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   Identifier: str2
+|   |   |   |   |   Operator<Add(+)>
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Function call: Identifier: str  Arguments: 1
+|   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   Identifier: c
+

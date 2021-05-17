@@ -1,0 +1,474 @@
+Program:
+|   Definition:
+|   |   Type definition: Identifier<Type(Punkt)>
+|   |   |   VariableDeclaration: public Keyword<float> x
+|   |   |   VariableDeclaration: public Keyword<float> y
+|   |   |   Function definition: public Identifier<Type(Punkt)> punkt
+|   |   |   |   VariableDeclaration: public Keyword<float> x
+|   |   |   |   VariableDeclaration: public Keyword<float> y
+|   |   |   |   Statement:
+|   |   |   |   |   Instruction: 
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Identifier: Object: this Member: x
+|   |   |   |   |   |   |   |   Operator<Assign>
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Identifier: x
+|   |   |   |   |   Instruction: 
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Identifier: Object: this Member: y
+|   |   |   |   |   |   |   |   Operator<Assign>
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Identifier: y
+|   Definition:
+|   |   Type definition: Identifier<Type(Trojkat)>
+|   |   |   VariableDeclaration: private Identifier<Type(Punkt)> a
+|   |   |   VariableDeclaration: private Identifier<Type(Punkt)> b
+|   |   |   VariableDeclaration: private Identifier<Type(Punkt)> c
+|   |   |   VariableDeclaration: private Keyword<float> sideA
+|   |   |   VariableDeclaration: private Keyword<float> sideB
+|   |   |   VariableDeclaration: private Keyword<float> sideC
+|   |   |   Function definition: private Keyword<void> zaktualizujBoki
+|   |   |   |   Statement:
+|   |   |   |   |   Instruction: 
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Identifier: sideA
+|   |   |   |   |   |   |   |   Operator<Assign>
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Identifier: Object: a Member: x
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Operator<Add(-)>
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Identifier: Object: b Member: x
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   Operator<Exp>
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Literal: Literal<Integer(2)>
+|   |   |   |   |   |   |   |   |   |   |   |   Operator<Add(+)>
+|   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Identifier: Object: a Member: y
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Operator<Add(-)>
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Identifier: Object: b Member: y
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   Operator<Exp>
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Literal: Literal<Integer(2)>
+|   |   |   |   |   |   |   |   |   |   Operator<Exp>
+|   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   Literal: Literal<Float(0.500000)>
+|   |   |   |   |   Instruction: 
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Identifier: sideB
+|   |   |   |   |   |   |   |   Operator<Assign>
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Identifier: Object: b Member: x
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Operator<Add(-)>
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Identifier: Object: c Member: x
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   Operator<Exp>
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Literal: Literal<Integer(2)>
+|   |   |   |   |   |   |   |   |   |   |   |   Operator<Add(+)>
+|   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Identifier: Object: b Member: y
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Operator<Add(-)>
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Identifier: Object: c Member: y
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   Operator<Exp>
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Literal: Literal<Integer(2)>
+|   |   |   |   |   |   |   |   |   |   Operator<Exp>
+|   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   Literal: Literal<Float(0.500000)>
+|   |   |   |   |   Instruction: 
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Identifier: sideC
+|   |   |   |   |   |   |   |   Operator<Assign>
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Identifier: Object: c Member: x
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Operator<Add(-)>
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Identifier: Object: a Member: x
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   Operator<Exp>
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Literal: Literal<Integer(2)>
+|   |   |   |   |   |   |   |   |   |   |   |   Operator<Add(+)>
+|   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Identifier: Object: c Member: y
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Operator<Add(-)>
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Identifier: Object: a Member: y
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   Operator<Exp>
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Literal: Literal<Integer(2)>
+|   |   |   |   |   |   |   |   |   |   Operator<Exp>
+|   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   Literal: Literal<Float(0.500000)>
+|   |   |   Function definition: public Identifier<Type(Trojkat)> trojkat
+|   |   |   |   VariableDeclaration: public Identifier<Type(Punkt)> na
+|   |   |   |   VariableDeclaration: public Identifier<Type(Punkt)> nb
+|   |   |   |   VariableDeclaration: public Identifier<Type(Punkt)> nc
+|   |   |   |   Statement:
+|   |   |   |   |   Instruction: 
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Identifier: a
+|   |   |   |   |   |   |   |   Operator<Assign>
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Identifier: na
+|   |   |   |   |   Instruction: 
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Identifier: b
+|   |   |   |   |   |   |   |   Operator<Assign>
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Identifier: nb
+|   |   |   |   |   Instruction: 
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Identifier: c
+|   |   |   |   |   |   |   |   Operator<Assign>
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Identifier: nc
+|   |   |   |   |   Instruction: 
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Function call: Identifier: zaktualizujBoki  Arguments: 0
+|   |   |   Function definition: public Keyword<void> setA
+|   |   |   |   VariableDeclaration: public Identifier<Type(Punkt)> na
+|   |   |   |   Statement:
+|   |   |   |   |   Instruction: 
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Identifier: a
+|   |   |   |   |   |   |   |   Operator<Assign>
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Identifier: na
+|   |   |   |   |   Instruction: 
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Function call: Identifier: zaktualizujBoki  Arguments: 0
+|   |   |   Function definition: public Keyword<void> setB
+|   |   |   |   VariableDeclaration: public Identifier<Type(Punkt)> nb
+|   |   |   |   Statement:
+|   |   |   |   |   Instruction: 
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Identifier: b
+|   |   |   |   |   |   |   |   Operator<Assign>
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Identifier: nb
+|   |   |   |   |   Instruction: 
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Function call: Identifier: zaktualizujBoki  Arguments: 0
+|   |   |   Function definition: public Keyword<void> setC
+|   |   |   |   VariableDeclaration: public Identifier<Type(Punkt)> nc
+|   |   |   |   Statement:
+|   |   |   |   |   Instruction: 
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Identifier: c
+|   |   |   |   |   |   |   |   Operator<Assign>
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Identifier: nc
+|   |   |   |   |   Instruction: 
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Function call: Identifier: zaktualizujBoki  Arguments: 0
+|   |   |   Function definition: public Keyword<float> obwod
+|   |   |   |   Statement:
+|   |   |   |   |   Instruction: 
+|   |   |   |   |   |   Return statement:
+|   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   Identifier: sideA
+|   |   |   |   |   |   |   |   |   |   |   Operator<Add(+)>
+|   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   Identifier: sideB
+|   |   |   |   |   |   |   |   |   Operator<Add(+)>
+|   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   Identifier: sideC
+|   |   |   Function definition: public Keyword<float> pole
+|   |   |   |   Statement:
+|   |   |   |   |   Instruction: 
+|   |   |   |   |   |   VariableDeclaration: public Keyword<float> s
+|   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   Function call: Identifier: obwod  Arguments: 0
+|   |   |   |   |   |   |   |   |   Operator<Mul(/)>
+|   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   Literal: Literal<Integer(2)>
+|   |   |   |   |   Instruction: 
+|   |   |   |   |   |   Return statement:
+|   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Identifier: s
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Operator<Mul(*)>
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Identifier: s
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Operator<Add(-)>
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Identifier: sideA
+|   |   |   |   |   |   |   |   |   |   |   |   |   Operator<Mul(*)>
+|   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Identifier: s
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Operator<Add(-)>
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   Identifier: sideB
+|   |   |   |   |   |   |   |   |   |   |   Operator<Mul(*)>
+|   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   Identifier: s
+|   |   |   |   |   |   |   |   |   |   |   |   |   Operator<Add(-)>
+|   |   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   Identifier: c
+|   |   |   |   |   |   |   |   |   Operator<Exp>
+|   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   Literal: Literal<Float(0.500000)>
+|   Definition:
+|   |   VariableDeclaration: public Identifier<Type(Punkt)> a
+|   Statement:
+|   |   Instruction: 
+|   |   |   Expression: 
+|   |   |   |   Binary expression: 
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Identifier: Object: a Member: x
+|   |   |   |   |   Operator<Assign>
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Literal: Literal<Integer(5)>
+|   Statement:
+|   |   Instruction: 
+|   |   |   Expression: 
+|   |   |   |   Binary expression: 
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Identifier: Object: a Member: y
+|   |   |   |   |   Operator<Assign>
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Literal: Literal<Integer(5)>
+|   Definition:
+|   |   VariableDeclaration: public Identifier<Type(Punkt)> b
+|   Statement:
+|   |   Instruction: 
+|   |   |   Expression: 
+|   |   |   |   Binary expression: 
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Identifier: Object: b Member: x
+|   |   |   |   |   Operator<Assign>
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Literal: Literal<Float(0.000000)>
+|   Statement:
+|   |   Instruction: 
+|   |   |   Expression: 
+|   |   |   |   Binary expression: 
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Identifier: Object: b Member: y
+|   |   |   |   |   Operator<Assign>
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Literal: Literal<Float(6.200000)>
+|   Definition:
+|   |   VariableDeclaration: public Identifier<Type(Punkt)> c
+|   Statement:
+|   |   Instruction: 
+|   |   |   Expression: 
+|   |   |   |   Binary expression: 
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Identifier: Object: c Member: x
+|   |   |   |   |   Operator<Assign>
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Literal: Literal<Float(3.200000)>
+|   Statement:
+|   |   Instruction: 
+|   |   |   Expression: 
+|   |   |   |   Binary expression: 
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Identifier: Object: c Member: y
+|   |   |   |   |   Operator<Assign>
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   Literal: Literal<Integer(0)>
+|   |   |   |   |   |   |   Operator<Add(-)>
+|   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   Literal: Literal<Float(4.800000)>
+|   Definition:
+|   |   VariableDeclaration: public Identifier<Type(Trojkat)> t
+|   Statement:
+|   |   Instruction: 
+|   |   |   Expression: 
+|   |   |   |   Function call: Object: t Member: setA  Arguments: 1
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Identifier: a
+|   Statement:
+|   |   Instruction: 
+|   |   |   Expression: 
+|   |   |   |   Function call: Object: t Member: setB  Arguments: 1
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Identifier: b
+|   Statement:
+|   |   Instruction: 
+|   |   |   Expression: 
+|   |   |   |   Function call: Object: t Member: setC  Arguments: 1
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Identifier: c
+|   Definition:
+|   |   VariableDeclaration: public Keyword<float> pole
+|   |   |   Expression: 
+|   |   |   |   Function call: Object: t Member: pole  Arguments: 0
+|   Statement:
+|   |   Instruction: 
+|   |   |   Expression: 
+|   |   |   |   Function call: Identifier: println  Arguments: 1
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   Literal: Literal<String(Pole trojkata to )>
+|   |   |   |   |   |   |   Operator<Add(+)>
+|   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   Function call: Identifier: str  Arguments: 1
+|   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   Identifier: pole
+|   Statement:
+|   |   Instruction: 
+|   |   |   Expression: 
+|   |   |   |   Binary expression: 
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Identifier: Object: a Member: x
+|   |   |   |   |   Operator<Assign>
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Literal: Literal<Integer(20)>
+|   Statement:
+|   |   Instruction: 
+|   |   |   If statement: condition, if true, if false:
+|   |   |   |   Expression: 
+|   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Identifier: Object: t Member: pole
+|   |   |   |   |   |   Operator<Eq(!=)>
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Identifier: pole
+|   |   |   |   Statement:
+|   |   |   |   |   Instruction: 
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Function call: Identifier: println  Arguments: 1
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Literal: Literal<String(Cos nie tak, tu pole nie powinno sie zmienic)>
+|   |   |   |   Statement:
+|   |   |   |   |   Instruction: 
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Function call: Identifier: println  Arguments: 1
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Literal: Literal<String(Pole sie nie zmienilo)>
+|   Statement:
+|   |   Instruction: 
+|   |   |   Expression: 
+|   |   |   |   Function call: Object: t Member: setA  Arguments: 1
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Identifier: a
+|   Statement:
+|   |   Instruction: 
+|   |   |   If statement: condition, if true, if false:
+|   |   |   |   Expression: 
+|   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Identifier: Object: t Member: pole
+|   |   |   |   |   |   Operator<Eq(!=)>
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Identifier: pole
+|   |   |   |   Statement:
+|   |   |   |   |   Instruction: 
+|   |   |   |   |   |   VariableDeclaration: public Keyword<string> komunikat
+|   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   Literal: Literal<String(Pole trojkata zmienilo sie. Teraz jest rowne )>
+|   |   |   |   |   Instruction: 
+|   |   |   |   |   |   VariableDeclaration: public Keyword<string> poleStr
+|   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   Function call: Identifier: str  Arguments: 1
+|   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   Identifier: Object: t Member: pole
+|   |   |   |   |   Instruction: 
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Identifier: komunikat
+|   |   |   |   |   |   |   |   Operator<Assign>
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   Identifier: komunikat
+|   |   |   |   |   |   |   |   |   |   Operator<Add(+)>
+|   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   Identifier: poleStr
+|   |   |   |   |   Instruction: 
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Function call: Identifier: println  Arguments: 1
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Identifier: komunikat
+|   |   |   |   Statement:
+|   |   |   |   |   Instruction: 
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Function call: Identifier: println  Arguments: 1
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Literal: Literal<String(Cos nie tak, pole sie nie zmienilo)>
+

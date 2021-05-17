@@ -1,0 +1,116 @@
+Program:
+|   Definition:
+|   |   Function definition: public Keyword<int> dodaj
+|   |   |   VariableDeclaration: public Keyword<int> a
+|   |   |   VariableDeclaration: public Keyword<int> b
+|   |   |   Statement:
+|   |   |   |   Instruction: 
+|   |   |   |   |   Return statement:
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Identifier: a
+|   |   |   |   |   |   |   |   Operator<Add(+)>
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Identifier: b
+|   Definition:
+|   |   Function definition: public Keyword<int> dodaj5
+|   |   |   VariableDeclaration: public Keyword<int> a
+|   |   |   Statement:
+|   |   |   |   Instruction: 
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   Identifier: a
+|   |   |   |   |   |   |   Operator<Assign>
+|   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   Identifier: a
+|   |   |   |   |   |   |   |   |   Operator<Add(+)>
+|   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   Literal: Literal<Integer(5)>
+|   |   |   |   Instruction: 
+|   |   |   |   |   Return statement:
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Identifier: a
+|   Definition:
+|   |   VariableDeclaration: public Keyword<int> a
+|   |   |   Expression: 
+|   |   |   |   Literal: Literal<Integer(2)>
+|   Definition:
+|   |   VariableDeclaration: public Keyword<int> b
+|   |   |   Expression: 
+|   |   |   |   Function call: Identifier: dodaj  Arguments: 2
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Identifier: a
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Literal: Literal<Integer(4)>
+|   Definition:
+|   |   VariableDeclaration: public Keyword<int> c
+|   |   |   Expression: 
+|   |   |   |   Function call: Identifier: dodaj5  Arguments: 1
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Identifier: a
+|   Statement:
+|   |   Instruction: 
+|   |   |   Expression: 
+|   |   |   |   Function call: Identifier: println  Arguments: 1
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Identifier: a
+|   Statement:
+|   |   Instruction: 
+|   |   |   Expression: 
+|   |   |   |   Function call: Identifier: println  Arguments: 1
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Identifier: b
+|   Statement:
+|   |   Instruction: 
+|   |   |   Expression: 
+|   |   |   |   Function call: Identifier: println  Arguments: 1
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Identifier: c
+|   Definition:
+|   |   Function definition: public Keyword<int> silnia
+|   |   |   VariableDeclaration: public Keyword<int> n
+|   |   |   Statement:
+|   |   |   |   Instruction: 
+|   |   |   |   |   If statement: condition, if true, if false:
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Identifier: n
+|   |   |   |   |   |   |   |   Operator<Rel(<=)>
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Literal: Literal<Integer(1)>
+|   |   |   |   |   |   Statement:
+|   |   |   |   |   |   |   Instruction: 
+|   |   |   |   |   |   |   |   Return statement:
+|   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   Literal: Literal<Integer(1)>
+|   |   |   |   |   |   Null
+|   |   |   |   Instruction: 
+|   |   |   |   |   Return statement:
+|   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Identifier: n
+|   |   |   |   |   |   |   |   Operator<Mul(*)>
+|   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   Function call: Identifier: silnia  Arguments: 1
+|   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   Binary expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   Identifier: n
+|   |   |   |   |   |   |   |   |   |   |   |   Operator<Add(-)>
+|   |   |   |   |   |   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   |   |   |   |   |   Literal: Literal<Integer(1)>
+|   Statement:
+|   |   Instruction: 
+|   |   |   Expression: 
+|   |   |   |   Function call: Identifier: print  Arguments: 1
+|   |   |   |   |   Expression: 
+|   |   |   |   |   |   Function call: Identifier: silnia  Arguments: 1
+|   |   |   |   |   |   |   Expression: 
+|   |   |   |   |   |   |   |   Literal: Literal<Integer(5)>
+
