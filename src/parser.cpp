@@ -226,27 +226,27 @@ bool Parser::expect(int operatorClass, int operatorType, string msg)
 
 std::shared_ptr<Expression> Parser::parseAssignExpression()
 {
-    return parseBinaryExpression(bind(&Parser::parseOrExpression, this), OPERATOR_TOKEN, T_ASSIGN, true);
+    return parseBinaryExpression(bind_front(&Parser::parseOrExpression, this), OPERATOR_TOKEN, T_ASSIGN, true);
 }
 
 std::shared_ptr<Expression> Parser::parseOrExpression()
 {
-    return parseBinaryExpression(bind(&Parser::parseAndExpression, this), KEYWORD_TOKEN, T_OR);
+    return parseBinaryExpression(bind_front(&Parser::parseAndExpression, this), KEYWORD_TOKEN, T_OR);
 }
 
 std::shared_ptr<Expression> Parser::parseAndExpression()
 {
-    return parseBinaryExpression(bind(&Parser::parseEqExpression, this), KEYWORD_TOKEN, T_AND);
+    return parseBinaryExpression(bind_front(&Parser::parseEqExpression, this), KEYWORD_TOKEN, T_AND);
 }
 
 std::shared_ptr<Expression> Parser::parseEqExpression()
 {
-    return parseBinaryExpression(bind(&Parser::parseRelExpression, this), OPERATOR_TOKEN, T_EQ);
+    return parseBinaryExpression(bind_front(&Parser::parseRelExpression, this), OPERATOR_TOKEN, T_EQ);
 }
 
 std::shared_ptr<Expression> Parser::parseRelExpression()
 {
-    return parseBinaryExpression(bind(&Parser::parseAddExpression, this), OPERATOR_TOKEN, T_REL);
+    return parseBinaryExpression(bind_front(&Parser::parseAddExpression, this), OPERATOR_TOKEN, T_REL);
 }
 
 std::shared_ptr<Expression> Parser::parseAddExpression()
@@ -270,17 +270,17 @@ std::shared_ptr<Expression> Parser::parseAddExpression()
         }
         return nullptr;
     }
-    return parseBinaryExpression(bind(&Parser::parseMulExpression, this), OPERATOR_TOKEN, T_ADD);
+    return parseBinaryExpression(bind_front(&Parser::parseMulExpression, this), OPERATOR_TOKEN, T_ADD);
 }
 
 std::shared_ptr<Expression> Parser::parseMulExpression()
 {
-    return parseBinaryExpression(bind(&Parser::parseExpExpression, this), OPERATOR_TOKEN, T_MUL);
+    return parseBinaryExpression(bind_front(&Parser::parseExpExpression, this), OPERATOR_TOKEN, T_MUL);
 }
 
 std::shared_ptr<Expression> Parser::parseExpExpression()
 {
-    return parseBinaryExpression(bind(&Parser::parsePrimaryExpression, this), OPERATOR_TOKEN, T_EXP, true);
+    return parseBinaryExpression(bind_front(&Parser::parsePrimaryExpression, this), OPERATOR_TOKEN, T_EXP, true);
 }
 
 std::shared_ptr<Expression> Parser::parsePrimaryExpression()

@@ -56,10 +56,10 @@ const std::string Token::toString()
             return identifierToString();
         case LITERAL_TOKEN:
             return literalToString();
-        case UNKNOWN_TOKEN:
-            return "Unknown";
         case EOT_TOKEN:
             return "EOT";
+        default:
+            return "Unknown";
     }
 }
 

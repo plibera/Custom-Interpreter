@@ -5,16 +5,13 @@
 
 #include "parser.h"
 
-/*
+
 
 TEST(ParserTest, ParsesIdentifier) {
     std::stringstream ss;
-    Parser* parser = new Parser(ss, true);
-    Token token(IDENTIFIER_TOKEN, T_VAR, 0, 0, 0, "x");
-    parser->addTestToken(token);
-    Token token2(KEYWORD_TOKEN, T_SEMICOLON, 0, 0, 0);
-    parser->addTestToken(token2);
-    std::shared_ptr<Program> program = parser->parse();
+    ss<<"x;";
+    Parser parser(ss);
+    std::shared_ptr<Program> program = parser.parse();
 
     Program program2;
     std::shared_ptr<Statement> statement = std::make_shared<Statement>();
@@ -27,21 +24,13 @@ TEST(ParserTest, ParsesIdentifier) {
     statement->instructions.push_back(instruction);
     program2.program.push_back(statement);
     ASSERT_EQ(program->to_string(), program2.to_string());
-    delete parser;
 }
 
 TEST(ParserTest, ParsesAccessIdentifier) {
     std::stringstream ss;
-    Parser* parser = new Parser(ss, true);
-    Token token(IDENTIFIER_TOKEN, T_VAR, 0, 0, 0, "x");
-    parser->addTestToken(token);
-    token = Token(KEYWORD_TOKEN, T_ACCESS, 0, 0, 0);
-    parser->addTestToken(token);
-    token = Token(IDENTIFIER_TOKEN, T_VAR, 0, 0, 0, "y");
-    parser->addTestToken(token);
-    token = Token(KEYWORD_TOKEN, T_SEMICOLON, 0, 0, 0);
-    parser->addTestToken(token);
-    std::shared_ptr<Program> program = parser->parse();
+    ss<<"x.y;";
+    Parser parser(ss);
+    std::shared_ptr<Program> program = parser.parse();
 
     Program program2;
     std::shared_ptr<Statement> statement = std::make_shared<Statement>();
@@ -55,25 +44,13 @@ TEST(ParserTest, ParsesAccessIdentifier) {
     statement->instructions.push_back(instruction);
     program2.program.push_back(statement);
     ASSERT_EQ(program->to_string(), program2.to_string());
-    delete parser;
 }
 
 TEST(ParserTest, ParsesAddMulExpression) {
     std::stringstream ss;
-    Parser* parser = new Parser(ss, true);
-    Token token(IDENTIFIER_TOKEN, T_VAR, 0, 0, 0, "x");
-    parser->addTestToken(token);
-    token = Token(OPERATOR_TOKEN, T_ADD, 0, 0, 0, operatorIdMap.at("+"));
-    parser->addTestToken(token);
-    token = Token(IDENTIFIER_TOKEN, T_VAR, 0, 0, 0, "y");
-    parser->addTestToken(token);
-    token = Token(OPERATOR_TOKEN, T_MUL, 0, 0, 0, operatorIdMap.at("*"));
-    parser->addTestToken(token);
-    token = Token(IDENTIFIER_TOKEN, T_VAR, 0, 0, 0, "z");
-    parser->addTestToken(token);
-    token = Token(KEYWORD_TOKEN, T_SEMICOLON, 0, 0, 0);
-    parser->addTestToken(token);
-    std::shared_ptr<Program> program = parser->parse();
+    ss<<"x+y*z;";
+    Parser parser(ss);
+    std::shared_ptr<Program> program = parser.parse();
 
     Program program2;
     std::shared_ptr<Statement> statement = std::make_shared<Statement>();
@@ -106,26 +83,14 @@ TEST(ParserTest, ParsesAddMulExpression) {
     statement->instructions.push_back(instruction);
     program2.program.push_back(statement);
     ASSERT_EQ(program->to_string(), program2.to_string());
-    delete parser;
 }
 
 
 TEST(ParserTest, ParsesExpExpression) {
     std::stringstream ss;
-    Parser* parser = new Parser(ss, true);
-    Token token(IDENTIFIER_TOKEN, T_VAR, 0, 0, 0, "x");
-    parser->addTestToken(token);
-    token = Token(OPERATOR_TOKEN, T_EXP, 0, 0, 0, operatorIdMap.at("**"));
-    parser->addTestToken(token);
-    token = Token(IDENTIFIER_TOKEN, T_VAR, 0, 0, 0, "y");
-    parser->addTestToken(token);
-    token = Token(OPERATOR_TOKEN, T_EXP, 0, 0, 0, operatorIdMap.at("**"));
-    parser->addTestToken(token);
-    token = Token(IDENTIFIER_TOKEN, T_VAR, 0, 0, 0, "z");
-    parser->addTestToken(token);
-    token = Token(KEYWORD_TOKEN, T_SEMICOLON, 0, 0, 0);
-    parser->addTestToken(token);
-    std::shared_ptr<Program> program = parser->parse();
+    ss<<"x**y**z;";
+    Parser parser(ss);
+    std::shared_ptr<Program> program = parser.parse();
 
     Program program2;
     std::shared_ptr<Statement> statement = std::make_shared<Statement>();
@@ -158,29 +123,13 @@ TEST(ParserTest, ParsesExpExpression) {
     statement->instructions.push_back(instruction);
     program2.program.push_back(statement);
     ASSERT_EQ(program->to_string(), program2.to_string());
-    delete parser;
 }
 
 TEST(ParserTest, ParsesPrimaryExpression) {
     std::stringstream ss;
-    Parser* parser = new Parser(ss, true);
-    Token token(IDENTIFIER_TOKEN, T_VAR, 0, 0, 0, "x");
-    parser->addTestToken(token);
-    token = Token(OPERATOR_TOKEN, T_ADD, 0, 0, 0, operatorIdMap.at("*"));
-    parser->addTestToken(token);
-    token = Token(KEYWORD_TOKEN, T_LEFTPAREN, 0, 0, 0);
-    parser->addTestToken(token);
-    token = Token(IDENTIFIER_TOKEN, T_VAR, 0, 0, 0, "y");
-    parser->addTestToken(token);
-    token = Token(OPERATOR_TOKEN, T_MUL, 0, 0, 0, operatorIdMap.at("+"));
-    parser->addTestToken(token);
-    token = Token(IDENTIFIER_TOKEN, T_VAR, 0, 0, 0, "z");
-    parser->addTestToken(token);
-    token = Token(KEYWORD_TOKEN, T_RIGHTPAREN, 0, 0, 0);
-    parser->addTestToken(token);
-    token = Token(KEYWORD_TOKEN, T_SEMICOLON, 0, 0, 0);
-    parser->addTestToken(token);
-    std::shared_ptr<Program> program = parser->parse();
+    ss<<"x*(y+z);";
+    Parser parser(ss);
+    std::shared_ptr<Program> program = parser.parse();
 
     Program program2;
     std::shared_ptr<Statement> statement = std::make_shared<Statement>();
@@ -203,58 +152,24 @@ TEST(ParserTest, ParsesPrimaryExpression) {
     expression3->expression = identifier3;
     binaryExpression->lhs = expression2;
     binaryExpression->rhs = expression3;
-    binaryExpression->op = Token(OPERATOR_TOKEN, T_MUL, 0, 0, 0, operatorIdMap.at("*"));
+    binaryExpression->op = Token(OPERATOR_TOKEN, T_ADD, 0, 0, 0, operatorIdMap.at("+"));
     expression4->expression = binaryExpression;
     binaryExpression2->lhs = expression;
     binaryExpression2->rhs = expression4;
-    binaryExpression2->op = Token(OPERATOR_TOKEN, T_ADD, 0, 0, 0, operatorIdMap.at("+"));
+    binaryExpression2->op = Token(OPERATOR_TOKEN, T_MUL, 0, 0, 0, operatorIdMap.at("*"));
     expression5->expression = binaryExpression2;
     instruction->instruction = expression5;
     statement->instructions.push_back(instruction);
     program2.program.push_back(statement);
     ASSERT_EQ(program->to_string(), program2.to_string());
-    delete parser;
 }
 
 
 TEST(ParserTest, ParsesIfStatement) {
     std::stringstream ss;
-    Parser* parser = new Parser(ss, true);
-    Token token(KEYWORD_TOKEN, T_IF, 0, 0, 0);
-    parser->addTestToken(token);
-    token = Token(KEYWORD_TOKEN, T_LEFTPAREN, 0, 0, 0);
-    parser->addTestToken(token);
-    token = Token(IDENTIFIER_TOKEN, T_VAR, 0, 0, 0, "x");
-    parser->addTestToken(token);
-    token = Token(OPERATOR_TOKEN, T_REL, 0, 0, 0, operatorIdMap.at("<"));
-    parser->addTestToken(token);
-    token = Token(IDENTIFIER_TOKEN, T_VAR, 0, 0, 0, "y");
-    parser->addTestToken(token);
-    token = Token(KEYWORD_TOKEN, T_RIGHTPAREN, 0, 0, 0);
-    parser->addTestToken(token);
-    token = Token(KEYWORD_TOKEN, T_LEFTBRACKET, 0, 0, 0);
-    parser->addTestToken(token);
-    token = Token(IDENTIFIER_TOKEN, T_VAR, 0, 0, 0, "x");
-    parser->addTestToken(token);
-    token = Token(OPERATOR_TOKEN, T_ASSIGN, 0, 0, 0, operatorIdMap.at("="));
-    parser->addTestToken(token);
-    token = Token(IDENTIFIER_TOKEN, T_VAR, 0, 0, 0, "y");
-    parser->addTestToken(token);
-    token = Token(KEYWORD_TOKEN, T_SEMICOLON, 0, 0, 0);
-    parser->addTestToken(token);
-    token = Token(KEYWORD_TOKEN, T_RIGHTBRACKET, 0, 0, 0);
-    parser->addTestToken(token);
-    token = Token(KEYWORD_TOKEN, T_ELSE, 0, 0, 0);
-    parser->addTestToken(token);
-    token = Token(IDENTIFIER_TOKEN, T_VAR, 0, 0, 0, "y");
-    parser->addTestToken(token);
-    token = Token(OPERATOR_TOKEN, T_ASSIGN, 0, 0, 0, operatorIdMap.at("="));
-    parser->addTestToken(token);
-    token = Token(IDENTIFIER_TOKEN, T_VAR, 0, 0, 0, "x");
-    parser->addTestToken(token);
-    token = Token(KEYWORD_TOKEN, T_SEMICOLON, 0, 0, 0);
-    parser->addTestToken(token);
-    std::shared_ptr<Program> program = parser->parse();
+    ss<<"if(x<y){x=y;} else y = x;";
+    Parser parser(ss);
+    std::shared_ptr<Program> program = parser.parse();
 
     Program program2;
     std::shared_ptr<Statement> statement = std::make_shared<Statement>();
@@ -317,5 +232,4 @@ TEST(ParserTest, ParsesIfStatement) {
     statement->instructions.push_back(instruction);
     program2.program.push_back(statement);
     ASSERT_EQ(program->to_string(), program2.to_string());
-    delete parser;
-}*/
+}
