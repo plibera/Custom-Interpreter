@@ -8,7 +8,7 @@ Source::Source(std::istream& stream)
 : input(stream), sourceIndex(-1), lineNumber(0), lineIndex(-1)
 {}
 
-const char Source::get()
+char Source::get()
 {
     const char c = input.get();
     sourceIndex++;
@@ -24,17 +24,17 @@ const char Source::get()
     return c;
 }
 
-const int Source::getSourceIndex()
+int Source::getSourceIndex() const
 {
     return sourceIndex;
 }
 
-const int Source::getLineNumber()
+int Source::getLineNumber() const
 {
     return lineNumber;
 }
 
-const int Source::getLineIndex()
+int Source::getLineIndex() const
 {
     return lineIndex;
 }

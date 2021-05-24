@@ -19,16 +19,9 @@ std::string Program::to_string(int indent)
     std::stringstream ss;
     ss<<makeIndent(indent);
     ss<<"Program:"<<endl;
-    for(auto element : program)
+    for(const auto& element : program)
     {
-        if(element.index() == 0)
-        {
-            ss<<std::get<std::shared_ptr<Definition>>(element)->to_string(indent+4);
-        }
-        else
-        {
-            ss<<std::get<std::shared_ptr<Statement>>(element)->to_string(indent+4);
-        }
+        ss << std::visit([&](const auto &ptr) { return ptr->to_string(indent+4); }, element);
     }
     return ss.str();
 }
@@ -39,19 +32,7 @@ std::string Definition::to_string(int indent)
     std::stringstream ss;
     ss<<makeIndent(indent);
     ss<<"Definition:"<<endl;
-    if(definition.index() == 0)
-    {
-        ss<<std::get<std::shared_ptr<FunDefinition>>(definition)->to_string(indent+4);
-    }
-    else if(definition.index() == 1)
-    {
-        ss<<std::get<std::shared_ptr<TypeDefinition>>(definition)->to_string(indent+4);
-    }
-    else
-    {
-        ss<<std::get<std::shared_ptr<VariableDeclaration>>(definition)->to_string(indent+4);
-    }
-    
+    ss << std::visit([&](const auto &ptr) { return ptr->to_string(indent+4); }, definition);
     return ss.str();
 }
 
@@ -60,7 +41,7 @@ std::string Statement::to_string(int indent)
     std::stringstream ss;
     ss<<makeIndent(indent);
     ss<<"Statement:"<<endl;
-    for(auto instruction : instructions)
+    for(const auto& instruction : instructions)
     {
         ss<<instruction->to_string(indent+4);
     }
@@ -72,10 +53,10 @@ std::string FunDefinition::to_string(int indent)
     std::stringstream ss;
     ss<<makeIndent(indent);
     if(statement)
-        ss<<"Function definition: "<<(isPublic?"public ":"private ")<<type->toString()<<" "<<identifier<<endl;
+        ss<<"Function definition: "<<(isPublic?"public ":"private ")<<type.toString()<<" "<<identifier<<endl;
     else
-        ss<<"Function declaration: "<<(isPublic?"public ":"private ")<<type->toString()<<" "<<identifier<<endl;
-    for(auto expression : arguments)
+        ss<<"Function declaration: "<<(isPublic?"public ":"private ")<<type.toString()<<" "<<identifier<<endl;
+    for(const auto& expression : arguments)
     {
         ss<<expression->to_string(indent+4);
     }
@@ -89,12 +70,12 @@ std::string TypeDefinition::to_string(int indent)
 {
     std::stringstream ss;
     ss<<makeIndent(indent);
-    ss<<"Type definition: "<<type->toString()<<endl;
-    for(auto expression : variables)
+    ss<<"Type definition: "<<type.toString()<<endl;
+    for(const auto& expression : variables)
     {
         ss<<expression->to_string(indent+4);
     }
-    for(auto function : functions)
+    for(const auto& function : functions)
     {
         ss<<function->to_string(indent+4);
     }
@@ -109,7 +90,7 @@ std::string BinaryExpression::to_string(int indent)
     ss<<"Binary expression: "<<endl;
     ss<<lhs->to_string(indent+4);
     ss<<makeIndent(indent+4);
-    ss<<op->toString()<<endl;
+    ss<<op.toString()<<endl;
     ss<<rhs->to_string(indent+4);
     return ss.str();
 }
@@ -123,7 +104,7 @@ std::string FunCall::to_string(int indent)
     else
         ss<<"Function call: Identifier: "<<identifier;
     ss<<"  Arguments: "<<arguments.size()<<endl;
-    for(auto argument : arguments)
+    for(const auto& argument : arguments)
     {
         ss<<argument->to_string(indent+4);
     }
@@ -135,21 +116,7 @@ std::string Expression::to_string(int indent)
     std::stringstream ss;
     ss<<makeIndent(indent);
     ss<<"Expression: "<<endl;
-    switch(expression.index())
-    {
-        case 0:
-            ss<<get<shared_ptr<BinaryExpression>>(expression)->to_string(indent+4);
-            break;
-        case 1:
-            ss<<get<shared_ptr<FunCall>>(expression)->to_string(indent+4);
-            break;
-        case 2:
-            ss<<get<shared_ptr<Literal>>(expression)->to_string(indent+4);
-            break;
-        case 3:
-            ss<<get<shared_ptr<Identifier>>(expression)->to_string(indent+4);
-            break;
-    }
+    ss << std::visit([&](const auto &ptr) { return ptr->to_string(indent+4); }, expression);
     return ss.str();
 }
 
@@ -157,7 +124,7 @@ std::string Literal::to_string(int indent)
 {
     std::stringstream ss;
     ss<<makeIndent(indent);
-    ss<<"Literal: "<<literal->toString()<<endl;
+    ss<<"Literal: "<<literal.toString()<<endl;
     return ss.str();
 }
 
@@ -177,24 +144,7 @@ std::string Instruction::to_string(int indent)
     std::stringstream ss;
     ss<<makeIndent(indent);
     ss<<"Instruction: "<<endl;
-    switch(instruction.index())
-    {
-        case 0:
-            ss<<get<shared_ptr<Expression>>(instruction)->to_string(indent+4);
-            break;
-        case 1:
-            ss<<get<shared_ptr<IfStatement>>(instruction)->to_string(indent+4);
-            break;
-        case 2:
-            ss<<get<shared_ptr<WhileStatement>>(instruction)->to_string(indent+4);
-            break;
-        case 3:
-            ss<<get<shared_ptr<ReturnStatement>>(instruction)->to_string(indent+4);
-            break;
-        case 4:
-            ss<<get<shared_ptr<VariableDeclaration>>(instruction)->to_string(indent+4);
-            break;
-    }
+    ss << std::visit([&](const auto &ptr) { return ptr->to_string(indent+4); }, instruction);
     return ss.str();
 }
 
@@ -235,7 +185,7 @@ std::string VariableDeclaration::to_string(int indent)
 {
     std::stringstream ss;
     ss<<makeIndent(indent);
-    ss<<"VariableDeclaration: "<<(isPublic?"public ":"private ")<<type->toString()<<" "<<identifier<<endl;
+    ss<<"VariableDeclaration: "<<(isPublic?"public ":"private ")<<type.toString()<<" "<<identifier<<endl;
     if(expression)
         ss<<expression->to_string(indent+4);
     return ss.str();

@@ -49,7 +49,7 @@ struct Statement
 
 struct FunDefinition
 {
-    std::shared_ptr<Token> type;
+    Token type;
     std::string identifier;
     std::vector<std::shared_ptr<VariableDeclaration>> arguments;
     std::shared_ptr<Statement> statement;
@@ -62,7 +62,7 @@ struct FunDefinition
 
 struct TypeDefinition
 {
-    std::shared_ptr<Token> type;
+    Token type;
     std::vector<std::shared_ptr<VariableDeclaration>> variables;
     std::vector<std::shared_ptr<FunDefinition>> functions;
 
@@ -74,7 +74,7 @@ struct BinaryExpression
 {
     std::shared_ptr<Expression> lhs;
     std::shared_ptr<Expression> rhs;
-    std::shared_ptr<Token> op;
+    Token op;
 
     std::string to_string(int indent = 0);
 };
@@ -99,7 +99,7 @@ struct Expression
 
 struct Literal
 {
-    std::shared_ptr<Token> literal;
+    Token literal;
 
     std::string to_string(int indent = 0);
 };
@@ -149,7 +149,7 @@ struct ReturnStatement
 
 struct VariableDeclaration
 {
-    std::shared_ptr<Token> type;
+    Token type;
     std::string identifier;
     std::shared_ptr<Expression> expression;
     bool isPublic;

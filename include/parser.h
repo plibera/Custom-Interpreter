@@ -35,7 +35,10 @@ class Parser
     std::shared_ptr<Expression> parseBinaryExpression(std::function<std::shared_ptr<Expression>()> parseChildExpression,
         int operatorClass, int operatorType, bool operationRightToLeft = false);
 
-    std::shared_ptr<Token> acceptOperator();
+    bool accept(int operatorClass, int operatorType);
+    bool consume(int operatorClass, int operatorType);
+    bool expect(int operatorClass, int operatorType, std::string msg);
+
 
     std::shared_ptr<Expression> parseLiteral();
     std::shared_ptr<Expression> parseIdentifierOrFunctionCall();
@@ -43,22 +46,14 @@ class Parser
     std::shared_ptr<IfStatement> parseIfStatement();
     std::shared_ptr<WhileStatement> parseWhileStatement();
     std::shared_ptr<ReturnStatement> parseReturnStatement();
-    void parseSemicolon();
-    bool parseComma();
-    bool parsePublicKeyword();
 
     std::shared_ptr<Definition> parseIdentifierOrFunctionDefinition(bool forceIdentifier = false);
     std::shared_ptr<TypeDefinition> parseTypeDefinition();
 
-    void getNextToken();
-
-    bool inTestMode;
-    std::queue<Token> testTokens;
+    Token getNextToken();
 
 public:
-    Parser(std::istream& stream, bool testMode = false) : lexer(stream), inTestMode(testMode) {}
+    Parser(std::istream& stream, bool testMode = false) : lexer(stream) {}
 
     std::shared_ptr<Program> parse();
-
-    void addTestToken(Token token);
 };

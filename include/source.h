@@ -16,8 +16,8 @@ class Source
 public:
     Source(std::istream& stream);
 
-    const char get();
-    const int getSourceIndex();
-    const int getLineNumber();
-    const int getLineIndex();
+    char get();
+    int getSourceIndex() const;
+    int getLineNumber() const;
+    int getLineIndex() const;
 };
