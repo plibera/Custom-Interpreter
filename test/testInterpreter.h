@@ -113,3 +113,64 @@ TEST(InterpreterTest, interpretsExponent) {
     ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
     ASSERT_EQ(*value, 8);
 }
+
+TEST(InterpreterTest, performsAssignment) {
+    std::stringstream ss;
+    ss<<"Int a = 5; return a;";
+    Interpreter interpreter(ss);    
+    interpreter.execute();
+    long long *value;
+    ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, 5);
+}
+
+TEST(InterpreterTest, performsAssignment2) {
+    std::stringstream ss;
+    ss<<"Int a; a = 5; return a;";
+    Interpreter interpreter(ss);    
+    interpreter.execute();
+    long long *value;
+    ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, 5);
+}
+
+TEST(InterpreterTest, controlsScope) {
+    std::stringstream ss;
+    ss<<"{Int a; a = 5;} return a;";
+    Interpreter interpreter(ss);    
+    ASSERT_THROW(interpreter.execute(), std::runtime_error);
+}
+
+TEST(InterpreterTest, controlsScope2) {
+    std::stringstream ss;
+    ss<<"Int a; {a = 5;} return a;";
+    Interpreter interpreter(ss);    
+    interpreter.execute();
+    long long *value;
+    ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, 5);
+}
+
+TEST(InterpreterTest, preventsRedefinition) {
+    std::stringstream ss;
+    ss<<"Int a = 5; Int a = 7; return a;";
+    Interpreter interpreter(ss);    
+    ASSERT_THROW(interpreter.execute(), std::runtime_error);
+}
+
+TEST(InterpreterTest, preventsRedefinition2) {
+    std::stringstream ss;
+    ss<<"Int a = 5; {Int a = 7;} return a;";
+    Interpreter interpreter(ss);    
+    ASSERT_THROW(interpreter.execute(), std::runtime_error);
+}
+
+TEST(InterpreterTest, preventsRedefinition3) {
+    std::stringstream ss;
+    ss<<"{Int a = 5;} Int a = 7; return a;";
+    Interpreter interpreter(ss);    
+    interpreter.execute();
+    long long *value;
+    ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, 7);
+}

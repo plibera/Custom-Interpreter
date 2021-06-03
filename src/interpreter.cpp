@@ -6,14 +6,14 @@ int Interpreter::execute()
 {
     shared_ptr<Program> program = parser.parse();
     returnValue = evaluate(program);
-    if(auto returnCode = get_if<long long>(returnValue->value.get()))
-    {
-        cerr<<"Program returned "<<*returnCode<<endl;
-        return 0;
-    }
     if(returnValue == nullptr)
     {
         cerr<<"Program finished without return statement."<<endl;
+        return 0;
+    }
+    if(auto returnCode = get_if<long long>(returnValue->value.get()))
+    {
+        cerr<<"Program returned "<<*returnCode<<endl;
         return 0;
     }
     if(returnValue->value == nullptr)
@@ -31,6 +31,7 @@ int Interpreter::execute()
 
 std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<Program> program)
 {
+    //cout<<"Evaluating program"<<endl;
     shared_ptr<Value> returnValue;
     for(auto& element : program->program)
     {
@@ -51,6 +52,7 @@ std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<Program> program)
 
 std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<Statement> statement)
 {
+    //cout<<"Evaluating statement"<<endl;
     shared_ptr<Value> returnValue;
     if(statement->newBlock)
     {
@@ -72,19 +74,14 @@ std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<Statement> statemen
 
 std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<BinaryExpression> binaryExpression)
 {
+    //cout<<"Evaluating binary expression"<<endl;
     if(binaryExpression->op.type == T_ASSIGN)
     {
         if(auto identifier = get_if<shared_ptr<Identifier>>(&binaryExpression->lhs->expression))
         {
-            if(auto variable = scope.getValue((*identifier)->identifier))
-            {
-                variable->value = evaluate(binaryExpression->rhs)->value;
-                return variable;
-            }
-            else
-            {
-                throw runtime_error("Variable "+(*identifier)->identifier+" does not exist");
-            }
+            auto newValue = evaluate(binaryExpression->rhs);
+            scope.assignValue((*identifier)->identifier, newValue);
+            return newValue;
         }
         else
         {
@@ -157,6 +154,7 @@ std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<BinaryExpression> b
             return make_shared<Value>(*leftValue ^ *rightValue);
         }
     }
+    throw runtime_error("Could not evaluate binary expression");
 }
 
 std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<FunCall> funCall)
@@ -166,6 +164,7 @@ std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<FunCall> funCall)
 
 std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<Expression> expression)
 {
+    //cout<<"Evaluating expression"<<endl;
     shared_ptr<Value> returnValue;
     if(auto binaryExpression = get_if<shared_ptr<BinaryExpression>>(&expression->expression))
     {
@@ -200,16 +199,29 @@ std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<Literal> literal)
     {
         return make_shared<Value>(*stringLiteral);
     }
+    if(literal->literal.classType == KEYWORD_TOKEN)
+    {
+        if(literal->literal.type = T_TRUE)
+        {
+            return make_shared<Value>(true);
+        }
+        if(literal->literal.type = T_FALSE)
+        {
+            return make_shared<Value>(false);
+        }
+    }
     throw runtime_error("Unknown literal type");
 }
 
 std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<Identifier> identifier)
 {
-    return nullptr;
+    //cout<<"Evaluating identifier"<<endl;
+    return scope.getValue(identifier->identifier);
 }
 
 std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<Instruction> instruction)
 {
+    //cout<<"Evaluating instruction"<<endl;
     shared_ptr<Value> returnValue;
     if(auto expression = get_if<shared_ptr<Expression>>(&instruction->instruction))
     {
@@ -260,6 +272,23 @@ std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<ReturnStatement> re
 
 void Interpreter::evaluate(std::shared_ptr<Definition> definition)
 {
+    //cout<<"Evaluating definition"<<endl;
+    if(auto funDefinition = get_if<shared_ptr<FunDefinition>>(&definition->definition))
+    {
+        evaluate(*funDefinition);
+        return;
+    }
+    else if(auto typeDefinition = get_if<shared_ptr<TypeDefinition>>(&definition->definition))
+    {
+        evaluate(*typeDefinition);
+        return;
+    }
+    else if(auto variableDeclaration = get_if<shared_ptr<VariableDeclaration>>(&definition->definition))
+    {
+        evaluate(*variableDeclaration);
+        return;
+    }
+    throw runtime_error("Could not evaluate definition");
 }
 
 void Interpreter::evaluate(std::shared_ptr<FunDefinition> funDefinition)
@@ -272,4 +301,29 @@ void Interpreter::evaluate(std::shared_ptr<TypeDefinition> typeDefinition)
 
 void Interpreter::evaluate(std::shared_ptr<VariableDeclaration> variableDeclaration)
 {
+    //cout<<"Evaluating variable declaration"<<endl;
+    if(variableDeclaration->type.classType == KEYWORD_TOKEN)
+    {
+        switch(variableDeclaration->type.type)
+        {
+            case T_INT:
+                scope.addVariable(variableDeclaration->identifier, make_shared<Value>((long long) 0));
+                break;
+            case T_FLOAT:
+                scope.addVariable(variableDeclaration->identifier, make_shared<Value>((double) 0));
+                break;
+            case T_STRING:
+                scope.addVariable(variableDeclaration->identifier, make_shared<Value>(""));
+                break;
+            case T_BOOL:
+                scope.addVariable(variableDeclaration->identifier, make_shared<Value>(false));
+                break;
+            default:
+                throw runtime_error("Unknown variable type");
+        }
+    }
+    if(variableDeclaration->expression != nullptr)
+    {
+        scope.assignValue(variableDeclaration->identifier, evaluate(variableDeclaration->expression));
+    }
 }

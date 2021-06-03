@@ -4,7 +4,9 @@ using namespace std;
 
 Scope::Scope(int maxStackSize)
     : maxStackSize(maxStackSize)
-{}
+{
+    newLevel();
+}
 
 
 void Scope::newInstructionBlock()
@@ -30,12 +32,26 @@ void Scope::newLevel()
 
 void Scope::endLevel()
 {
+    if(localScope.size() == 1)
+        throw runtime_error("Cannot scope lower, already at the lowest level");
     localScope.pop();
 }
 
 bool Scope::addVariable(std::string identifier, std::shared_ptr<Value> value)
 {
-    if(localScope.size() == 0)
+    bool variableExists = true;
+    try
+    {
+        getValue(identifier);
+    }
+    catch(const std::exception& e)
+    {
+        variableExists = false;
+    }
+    if(variableExists)
+        throw runtime_error("Variable " + identifier + " already exists");
+    
+    if(localScope.top().size() == 0)
     {
         globalScope.insert(make_pair(identifier, value));
     }
@@ -60,4 +76,47 @@ std::shared_ptr<Value> Scope::getValue(std::string identifier)
     {
         return element->second;
     }
+    throw runtime_error("Variable "+identifier+" does not exist");
+}
+
+void Scope::assignValue(std::string identifier, std::shared_ptr<Value> value)
+{
+    if(value == nullptr || value->value == nullptr)
+    {
+        return;
+    }
+    auto currentValue = getValue(identifier);
+    if(get_if<long long>(currentValue->value.get()))
+    {
+        if(get_if<long long>(value->value.get()))
+        {
+            currentValue->value = value->value;
+            return;
+        }
+    }
+    if(get_if<double>(currentValue->value.get()))
+    {
+        if(get_if<double>(value->value.get()))
+        {
+            currentValue->value = value->value;
+            return;
+        }
+    }
+    if(get_if<string>(currentValue->value.get()))
+    {
+        if(get_if<string>(value->value.get()))
+        {
+            currentValue->value = value->value;
+            return;
+        }
+    }
+    if(get_if<bool>(currentValue->value.get()))
+    {
+        if(get_if<bool>(value->value.get()))
+        {
+            currentValue->value = value->value;
+            return;
+        }
+    }
+    throw runtime_error("Cannot assign to "+identifier+" because of incompatible types");
 }
