@@ -3,6 +3,7 @@
 
 #include "testLexer.h"
 #include "testParser.h"
+#include "testInterpreter.h"
 
 using namespace std;
 

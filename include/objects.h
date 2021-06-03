@@ -8,6 +8,9 @@
 
 #include "token.h"
 
+/**
+ * Objects in the document tree
+ */
 
 struct Definition;
 struct Statement;

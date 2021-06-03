@@ -53,7 +53,7 @@ class Parser
     Token getNextToken();
 
 public:
-    Parser(std::istream& stream, bool testMode = false) : lexer(stream) {}
+    Parser(std::istream& stream) : lexer(stream) {}
 
     std::shared_ptr<Program> parse();
 };

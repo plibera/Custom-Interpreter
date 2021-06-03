@@ -19,6 +19,7 @@ add_executable(tkom
     src/parser.cpp
     src/main.cpp
     src/objects.cpp
+    src/interpreter.cpp
 )
 
 add_executable(testTkom
@@ -28,6 +29,7 @@ add_executable(testTkom
     src/lexer.cpp
     src/parser.cpp
     src/objects.cpp
+    src/interpreter.cpp
 )
 
 target_link_libraries(testTkom PRIVATE gtest)
