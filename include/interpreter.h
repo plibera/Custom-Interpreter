@@ -8,11 +8,15 @@
 
 #include "parser.h"
 #include "value.h"
+#include "scope.h"
 
 
 class Interpreter
 {
     Parser parser;
+    Scope scope;
+    //Value returned by the last execution
+    std::shared_ptr<Value> returnValue;
 
     //These evaluations can only return a value with a return statement
     std::shared_ptr<Value> evaluate(std::shared_ptr<Program> element);
@@ -38,5 +42,7 @@ class Interpreter
 public:
     Interpreter(std::istream& stream) : parser(stream) {}
 
-    long long execute();
+    int execute();
+
+    std::shared_ptr<Value> getLastReturnValue() { return returnValue; }
 };

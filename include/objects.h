@@ -46,6 +46,7 @@ struct Definition
 struct Statement
 {
     std::vector<std::shared_ptr<Instruction>> instructions;
+    bool newBlock = true;
 
     std::string to_string(int indent = 0);
 };

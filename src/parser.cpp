@@ -78,6 +78,7 @@ std::shared_ptr<Statement> Parser::parseStatement()
             statement->instructions.push_back(instruction);
         else
             return nullptr;
+        statement->newBlock = false;
     }
     return statement;
 }

@@ -20,6 +20,10 @@ void Scope::endInstructionBlock()
 
 void Scope::newLevel()
 {
+    if(localScope.size() >= maxStackSize)
+    {
+        throw runtime_error("Stack size limit exceeded");
+    }
     vector<map<string, shared_ptr<Value>>> levelScope;
     localScope.push(levelScope);
 }
@@ -29,9 +33,9 @@ void Scope::endLevel()
     localScope.pop();
 }
 
-bool Scope::addVariable(std::string identifier, std::shared_ptr<Value> value, bool isGlobal)
+bool Scope::addVariable(std::string identifier, std::shared_ptr<Value> value)
 {
-    if(isGlobal)
+    if(localScope.size() == 0)
     {
         globalScope.insert(make_pair(identifier, value));
     }
@@ -50,5 +54,10 @@ std::shared_ptr<Value> Scope::getValue(std::string identifier)
         {
             return element->second;
         }
+    }
+    auto element = globalScope.find(identifier);
+    if(element != globalScope.end())
+    {
+        return element->second;
     }
 }

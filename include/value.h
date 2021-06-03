@@ -5,6 +5,7 @@
 #include <variant>
 #include <memory>
 #include <sstream>
+#include <math.h>
 
 #include "objects.h"
 
@@ -17,7 +18,7 @@ struct CustomType
 };
 
 
-typedef std::variant<long long, double, std::string, std::shared_ptr<CustomType>> ValueType;
+typedef std::variant<long long, double, std::string, std::shared_ptr<CustomType>, bool> ValueType;
 
 struct Value
 {
@@ -25,8 +26,22 @@ struct Value
     std::shared_ptr<ValueType> value;
 
     Value(long long value) : value(std::make_shared<ValueType>(value)) {}
+    Value(bool value) : value(std::make_shared<ValueType>(value)) {}
     Value(double value) : value(std::make_shared<ValueType>(value)) {}
     Value(std::string value) : value(std::make_shared<ValueType>(value)) {}
     Value(std::shared_ptr<CustomType> value) : value(std::make_shared<ValueType>(value)) {}
     Value() : value(nullptr) {}
+
+    friend bool operator<(const Value& l, const Value& r);
+    friend bool operator>(const Value& l, const Value& r);
+    friend bool operator<=(const Value& l, const Value& r);
+    friend bool operator>=(const Value& l, const Value& r);
+    friend bool operator==(const Value& l, const Value& r);
+    friend bool operator!=(const Value& l, const Value& r);
+
+    friend Value operator+(const Value& l, const Value& r);
+    friend Value operator-(const Value& l, const Value& r);
+    friend Value operator*(const Value& l, const Value& r);
+    friend Value operator/(const Value& l, const Value& r);
+    friend Value operator^(const Value& l, const Value& r);
 };

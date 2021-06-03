@@ -2,29 +2,30 @@
 
 using namespace std;
 
-long long Interpreter::execute()
+int Interpreter::execute()
 {
     shared_ptr<Program> program = parser.parse();
-    shared_ptr<Value> retVal = evaluate(program);
-    if(auto returnCode = get_if<long long>(retVal->value.get()))
+    returnValue = evaluate(program);
+    if(auto returnCode = get_if<long long>(returnValue->value.get()))
     {
         cerr<<"Program returned "<<*returnCode<<endl;
-        return *returnCode;
+        return 0;
     }
-    if(retVal == nullptr)
+    if(returnValue == nullptr)
     {
         cerr<<"Program finished without return statement."<<endl;
         return 0;
     }
-    if(retVal->value == nullptr)
+    if(returnValue->value == nullptr)
     {
-        throw runtime_error("Program returned with no return value");
+        cerr<<"Program returned with no return value"<<endl;
+        return 1;
     }
     else
     {
-        throw runtime_error("Program returned value of type different than Int");
+        cerr<<"Program returned value of type different than Int"<<endl;
+        return 2;
     }
-    return 0;
 }
 
 
@@ -51,6 +52,10 @@ std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<Program> program)
 std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<Statement> statement)
 {
     shared_ptr<Value> returnValue;
+    if(statement->newBlock)
+    {
+        scope.newInstructionBlock();
+    }
     for(auto& instruction : statement->instructions)
     {
         if(returnValue = evaluate(instruction))
@@ -58,12 +63,100 @@ std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<Statement> statemen
             return returnValue;
         }
     }
+    if(statement->newBlock)
+    {
+        scope.endInstructionBlock();
+    }
     return nullptr;
 }
 
 std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<BinaryExpression> binaryExpression)
 {
-    return nullptr;
+    if(binaryExpression->op.type == T_ASSIGN)
+    {
+        if(auto identifier = get_if<shared_ptr<Identifier>>(&binaryExpression->lhs->expression))
+        {
+            if(auto variable = scope.getValue((*identifier)->identifier))
+            {
+                variable->value = evaluate(binaryExpression->rhs)->value;
+                return variable;
+            }
+            else
+            {
+                throw runtime_error("Variable "+(*identifier)->identifier+" does not exist");
+            }
+        }
+        else
+        {
+            throw runtime_error("Attempt to assign value to something else than an identifier");
+        }
+    }
+    shared_ptr<Value> leftValue = evaluate(binaryExpression->lhs);
+    shared_ptr<Value> rightValue = evaluate(binaryExpression->rhs);
+    long long *operatorId;
+    if(!(operatorId = get_if<long long>(&binaryExpression->op.value)))
+    {
+        throw runtime_error("Token operator value is of wrong type");
+    } 
+    if(binaryExpression->op.type == T_EQ)
+    {
+        if(*operatorId == operatorIdMap.at("=="))
+        {
+            return make_shared<Value>(*leftValue == *rightValue);
+        }
+        if(*operatorId == operatorIdMap.at("!="))
+        {
+            return make_shared<Value>(*leftValue != *rightValue);
+        }
+    }
+    else if(binaryExpression->op.type == T_REL)
+    {
+        if(*operatorId == operatorIdMap.at("<"))
+        {
+            return make_shared<Value>(*leftValue < *rightValue);
+        }
+        if(*operatorId == operatorIdMap.at(">"))
+        {
+            return make_shared<Value>(*leftValue > *rightValue);
+        }
+        if(*operatorId == operatorIdMap.at("<="))
+        {
+            return make_shared<Value>(*leftValue <= *rightValue);
+        }
+        if(*operatorId == operatorIdMap.at(">="))
+        {
+            return make_shared<Value>(*leftValue >= *rightValue);
+        }
+    }
+    else if(binaryExpression->op.type == T_ADD)
+    {
+        if(*operatorId == operatorIdMap.at("+"))
+        {
+            return make_shared<Value>(*leftValue + *rightValue);
+        }
+        if(*operatorId == operatorIdMap.at("-"))
+        {
+            return make_shared<Value>(*leftValue - *rightValue);
+        }
+    }
+    else if(binaryExpression->op.type == T_MUL)
+    {
+        if(*operatorId == operatorIdMap.at("*"))
+        {
+            return make_shared<Value>(*leftValue * *rightValue);
+        }
+        if(*operatorId == operatorIdMap.at("/"))
+        {
+            return make_shared<Value>(*leftValue / *rightValue);
+        }
+    }
+    else if(binaryExpression->op.type == T_EXP)
+    {
+        if(*operatorId == operatorIdMap.at("**"))
+        {
+            return make_shared<Value>(*leftValue ^ *rightValue);
+        }
+    }
 }
 
 std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<FunCall> funCall)
@@ -95,7 +188,6 @@ std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<Expression> express
 
 std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<Literal> literal)
 {
-    std::variant<long long, double, std::string> value;
     if(auto intLiteral = get_if<long long>(&literal->literal.value))
     {
         return make_shared<Value>(*intLiteral);

@@ -20,6 +20,8 @@ add_executable(tkom
     src/main.cpp
     src/objects.cpp
     src/interpreter.cpp
+    src/scope.cpp
+    src/value.cpp
 )
 
 add_executable(testTkom
@@ -30,6 +32,8 @@ add_executable(testTkom
     src/parser.cpp
     src/objects.cpp
     src/interpreter.cpp
+    src/scope.cpp
+    src/value.cpp
 )
 
 target_link_libraries(testTkom PRIVATE gtest)
