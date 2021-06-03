@@ -174,3 +174,33 @@ TEST(InterpreterTest, preventsRedefinition3) {
     ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
     ASSERT_EQ(*value, 7);
 }
+
+TEST(InterpreterTest, interpretsIf) {
+    std::stringstream ss;
+    ss<<"Int a; if(true) { a = 5; } return a;";
+    Interpreter interpreter(ss);    
+    interpreter.execute();
+    long long *value;
+    ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, 5);
+}
+
+TEST(InterpreterTest, interpretsWhile) {
+    std::stringstream ss;
+    ss<<"Int a = 0; while( a < 10 ) { a = a + 1; } return a;";
+    Interpreter interpreter(ss);    
+    interpreter.execute();
+    long long *value;
+    ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, 10);
+}
+
+TEST(InterpreterTest, interpretsWhile2) {
+    std::stringstream ss;
+    ss<<"Int a = 0; while( a < 10 ) { a = a + 1; if(a > 5) { return a; }} return 0;";
+    Interpreter interpreter(ss);    
+    interpreter.execute();
+    long long *value;
+    ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, 6);
+}

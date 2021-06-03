@@ -24,7 +24,7 @@ struct Scope
     void endInstructionBlock();
     void newLevel();
     void endLevel();
-    bool addVariable(std::string identifier, std::shared_ptr<Value> value);
+    void addVariable(std::string identifier, std::shared_ptr<Value> value);
     void assignValue(std::string identifier, std::shared_ptr<Value> value);
     std::shared_ptr<Value> getValue(std::string identifier);
 };

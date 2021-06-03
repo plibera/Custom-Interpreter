@@ -246,3 +246,20 @@ Value operator^(const Value& l, const Value& r)
     }
     throw runtime_error("Incompatible types for operator '**'");
 }
+
+bool Value::logicalValue()
+{
+    if(auto val = get_if<long long>(value.get()))
+    {
+        return *val == 0;
+    }
+    if(auto val = get_if<double>(value.get()))
+    {
+        return *val == 0.0;
+    }
+    if(auto val = get_if<bool>(value.get()))
+    {
+        return *val;
+    }
+    throw runtime_error("Could not convert expression to a logical value");
+}

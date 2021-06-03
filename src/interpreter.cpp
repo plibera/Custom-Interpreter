@@ -5,18 +5,18 @@ using namespace std;
 int Interpreter::execute()
 {
     shared_ptr<Program> program = parser.parse();
-    returnValue = evaluate(program);
-    if(returnValue == nullptr)
+    lastReturnValue = evaluate(program);
+    if(lastReturnValue == nullptr)
     {
         cerr<<"Program finished without return statement."<<endl;
         return 0;
     }
-    if(auto returnCode = get_if<long long>(returnValue->value.get()))
+    if(auto returnCode = get_if<long long>(lastReturnValue->value.get()))
     {
         cerr<<"Program returned "<<*returnCode<<endl;
         return 0;
     }
-    if(returnValue->value == nullptr)
+    if(lastReturnValue->value == nullptr)
     {
         cerr<<"Program returned with no return value"<<endl;
         return 1;
@@ -257,11 +257,40 @@ std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<Instruction> instru
 
 std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<IfStatement> ifStatement)
 {
+    shared_ptr<Value> returnValue;
+    if(evaluate(ifStatement->condition)->logicalValue())
+    {
+        scope.newInstructionBlock();
+        if(returnValue = evaluate(ifStatement->statementTrue))
+        {
+            return returnValue;
+        }
+        scope.endInstructionBlock();
+    }
+    else if(ifStatement->statementFalse != nullptr)
+    {
+        scope.newInstructionBlock();
+        if(returnValue = evaluate(ifStatement->statementFalse))
+        {
+            return returnValue;
+        }
+        scope.endInstructionBlock();
+    }
     return nullptr;
 }
 
 std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<WhileStatement> whileStatement)
 {
+    shared_ptr<Value> returnValue;
+    while(evaluate(whileStatement->condition)->logicalValue())
+    {
+        scope.newInstructionBlock();
+        if(returnValue = evaluate(whileStatement->statement))
+        {
+            return returnValue;
+        }
+        scope.endInstructionBlock();
+    }
     return nullptr;
 }
 

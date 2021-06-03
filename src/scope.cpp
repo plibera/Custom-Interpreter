@@ -37,7 +37,7 @@ void Scope::endLevel()
     localScope.pop();
 }
 
-bool Scope::addVariable(std::string identifier, std::shared_ptr<Value> value)
+void Scope::addVariable(std::string identifier, std::shared_ptr<Value> value)
 {
     bool variableExists = true;
     try

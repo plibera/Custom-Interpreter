@@ -44,4 +44,6 @@ struct Value
     friend Value operator*(const Value& l, const Value& r);
     friend Value operator/(const Value& l, const Value& r);
     friend Value operator^(const Value& l, const Value& r);
+
+    bool logicalValue();
 };
