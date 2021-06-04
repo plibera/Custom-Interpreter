@@ -251,11 +251,11 @@ bool Value::logicalValue()
 {
     if(auto val = get_if<long long>(value.get()))
     {
-        return *val == 0;
+        return *val != 0;
     }
     if(auto val = get_if<double>(value.get()))
     {
-        return *val == 0.0;
+        return *val != 0.0;
     }
     if(auto val = get_if<bool>(value.get()))
     {

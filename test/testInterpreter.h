@@ -204,3 +204,20 @@ TEST(InterpreterTest, interpretsWhile2) {
     ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
     ASSERT_EQ(*value, 6);
 }
+
+TEST(InterpreterTest, interpretsWhile3) {
+    std::stringstream ss;
+    ss<<"String s = \"0\"; while(s) { return 10; }";
+    Interpreter interpreter(ss);    
+    ASSERT_THROW(interpreter.execute(), std::runtime_error);
+}
+
+TEST(InterpreterTest, interpretsWhile4) {
+    std::stringstream ss;
+    ss<<"Int a = 5; while(a) { a = a-1; } return a;";
+    Interpreter interpreter(ss);    
+    interpreter.execute();
+    long long *value;
+    ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, 0);
+}

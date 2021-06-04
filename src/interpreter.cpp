@@ -187,6 +187,17 @@ std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<Expression> express
 
 std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<Literal> literal)
 {
+    if(literal->literal.classType == KEYWORD_TOKEN)
+    {
+        if(literal->literal.type = T_TRUE)
+        {
+            return make_shared<Value>(true);
+        }
+        if(literal->literal.type = T_FALSE)
+        {
+            return make_shared<Value>(false);
+        }
+    }
     if(auto intLiteral = get_if<long long>(&literal->literal.value))
     {
         return make_shared<Value>(*intLiteral);
@@ -198,17 +209,6 @@ std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<Literal> literal)
     if(auto stringLiteral = get_if<string>(&literal->literal.value))
     {
         return make_shared<Value>(*stringLiteral);
-    }
-    if(literal->literal.classType == KEYWORD_TOKEN)
-    {
-        if(literal->literal.type = T_TRUE)
-        {
-            return make_shared<Value>(true);
-        }
-        if(literal->literal.type = T_FALSE)
-        {
-            return make_shared<Value>(false);
-        }
     }
     throw runtime_error("Unknown literal type");
 }
