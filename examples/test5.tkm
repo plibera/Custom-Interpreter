@@ -26,52 +26,52 @@ class Trojkat
     # Prywatna metoda na nowo obliczajaca dlugosci bokow trojkata
     Void zaktualizujBoki()
     {
-        sideA = ((a.x-b.x)**2 + (a.y-b.y)**2)**0.5;
-        sideB = ((b.x-c.x)**2 + (b.y-c.y)**2)**0.5;
-        sideC = ((c.x-a.x)**2 + (c.y-a.y)**2)**0.5;
+        this.sideA = ((a.x-b.x)**2 + (a.y-b.y)**2)**0.5;
+        this.sideB = ((b.x-c.x)**2 + (b.y-c.y)**2)**0.5;
+        this.sideC = ((c.x-a.x)**2 + (c.y-a.y)**2)**0.5;
     }
 
 
     public Trojkat trojkat(Punkt na, Punkt nb, Punkt nc) {
-        a = na;
-        b = nb;
-        c = nc;
-        zaktualizujBoki();        
+        this.a = na;
+        this.b = nb;
+        this.c = nc;
+        this.zaktualizujBoki();        
     }
 
     public Void setA(Punkt na)
     {
-        a = na;
-        zaktualizujBoki();
+        this.a = na;
+        this.zaktualizujBoki();
     }
     
     public Void setB(Punkt nb)
     {
-        b = nb;
-        zaktualizujBoki();
+        this.b = nb;
+        this.zaktualizujBoki();
     }
 
     public Void setC(Punkt nc)
     {
-        c = nc;
-        zaktualizujBoki();
+        this.c = nc;
+        this.zaktualizujBoki();
     }
 
     public Float obwod(){
-        return sideA + sideB + sideC;
+        return this.sideA + this.sideB + this.sideC;
     }
 
     public Float pole(){
-        Float s = obwod()/2;
-        return (s*(s - sideA)*(s - sideB)*(s - c))**0.5;
+        Float s = this.obwod()/2;
+        return (s*(s - this.sideA)*(s - this.sideB)*(s - this.sideC))**0.5;
     }
 };
 
 
 
 Punkt a;
-a.x = 5;
-a.y = 5;
+a.x = 5.0;
+a.y = 5.0;
 Punkt b;
 b.x = 0.0;
 b.y = 6.2;
@@ -83,9 +83,9 @@ t.setA(a);
 t.setB(b);
 t.setC(c);
 Float pole = t.pole();
-println("Pole trojkata to " + str(pole));
-a.x = 20;
-if(t.pole != pole)
+println("Pole trojkata to " + str(pole)); #25.58
+a.x = 20.0;
+if(t.pole() != pole)
 {
     println("Cos nie tak, tu pole nie powinno sie zmienic");
 }    
@@ -94,12 +94,12 @@ else
     println("Pole sie nie zmienilo");
 }
 t.setA(a);
-if(t.pole != pole)
+if(t.pole() != pole)
 {
     String komunikat = "Pole trojkata zmienilo sie. Teraz jest rowne ";
-    String poleStr = str(t.pole);
+    String poleStr = str(t.pole());
     komunikat = komunikat + poleStr;
-    println(komunikat);
+    println(komunikat); #108.08
 }    
 else
 {

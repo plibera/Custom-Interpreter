@@ -15,7 +15,9 @@ class Interpreter
 {
     Parser parser;
     Scope scope;
-    std::vector<std::pair<std::shared_ptr<FunDefinition>, std::function<std::shared_ptr<Value>(std::shared_ptr<Statement>)>>> functions;
+    FunctionVector functions;
+    std::map<std::string, std::shared_ptr<TypeDefinition>> types;
+    std::string currentObject;
 
     //Value returned by the last execution
     std::shared_ptr<Value> lastReturnValue;
@@ -40,6 +42,7 @@ class Interpreter
     //These evaluations return the evaluated value
     std::shared_ptr<Value> evaluate(std::shared_ptr<BinaryExpression> element);
     std::shared_ptr<Value> evaluate(std::shared_ptr<FunCall> element);
+    std::shared_ptr<Value> runFunction(FunctionEntry &function, std::string &identifier, std::vector<std::shared_ptr<Value>> &argumentValues, Position &position);
     std::shared_ptr<Value> evaluate(std::shared_ptr<Expression> element);
     std::shared_ptr<Value> evaluate(std::shared_ptr<Literal> element);
     std::shared_ptr<Value> evaluate(std::shared_ptr<Identifier> element);
@@ -55,7 +58,7 @@ class Interpreter
     void createEmbeddedFunction(std::string identifier, Token type, std::function<std::shared_ptr<Value>(std::shared_ptr<Statement>)> callback);
 
 public:
-    Interpreter(std::istream& stream) : parser(stream) { createEmbeddedFunctions(); }
+    Interpreter(std::istream& stream) : parser(stream), currentObject("") { createEmbeddedFunctions(); }
 
     int execute();
 

@@ -17,7 +17,6 @@ struct Scope
     int maxStackSize;
     std::stack<std::vector<std::map<std::string, std::shared_ptr<Value>>>> localScope;
     std::map<std::string, std::shared_ptr<Value>> globalScope;
-
     Scope(int maxStackSize = 500);
 
     Position currentPos;
@@ -28,5 +27,11 @@ struct Scope
     void endLevel();
     void addVariable(std::string identifier, std::shared_ptr<Value> value);
     void assignValue(std::string identifier, std::shared_ptr<Value> value);
+    void assignValue(std::string object, std::string identifier, std::shared_ptr<Value> value);
+    void assignValue(std::shared_ptr<Value> l, std::shared_ptr<Value> r);
     std::shared_ptr<Value> getValue(std::string identifier);
+    std::shared_ptr<Value> getValue(std::string object, std::string identifier);
+
+    void startTypeDefinition();
+    std::map<std::string, std::shared_ptr<Value>> endTypeDefinition();
 };

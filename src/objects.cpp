@@ -51,6 +51,18 @@ bool areOfCorrespondingType(Token &token, std::shared_ptr<Value> value)
                 throw runtime_error("Unknown variable type");
         }
     }
+    else if(token.classType == IDENTIFIER_TOKEN && token.type == T_TYPE)
+    {
+        if(auto customType = get_if<shared_ptr<CustomType>>(value->value.get()))
+        {
+            if(auto typeIdentifier = get_if<string>(&token.value))
+            {
+                return *typeIdentifier == (*customType)->typeName;
+            }
+            return false;
+        }
+        return false;
+    }
     return false;
 }
 

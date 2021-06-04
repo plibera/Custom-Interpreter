@@ -89,6 +89,26 @@ std::shared_ptr<Value> Scope::getValue(std::string identifier)
     throw runtime_error("Variable "+identifier+" does not exist "+ currentPos.toString());
 }
 
+std::shared_ptr<Value> Scope::getValue(std::string object, std::string identifier)
+{
+    auto objectValue = getValue(object);
+    shared_ptr<CustomType> customType;
+    if(auto ct = get_if<shared_ptr<CustomType>>(objectValue->value.get()))
+    {
+        customType = *ct;
+    }
+    else
+    {
+        throw runtime_error("Variable is not a custom type "+ currentPos.toString());    
+    }
+    auto attribute = customType->attributes.find(identifier);
+    if(attribute != customType->attributes.end())
+    {
+        return attribute->second;
+    }
+    throw runtime_error("Attribute "+identifier+" does not exist in "+object+" "+ currentPos.toString());
+}
+
 void Scope::assignValue(std::string identifier, std::shared_ptr<Value> value)
 {
     if(value == nullptr || value->value == nullptr)
@@ -96,37 +116,72 @@ void Scope::assignValue(std::string identifier, std::shared_ptr<Value> value)
         return;
     }
     auto currentValue = getValue(identifier);
-    if(get_if<long long>(currentValue->value.get()))
+    assignValue(currentValue, value);
+}
+
+void Scope::assignValue(std::string object, std::string identifier, std::shared_ptr<Value> value)
+{
+    if(value == nullptr || value->value == nullptr)
     {
-        if(get_if<long long>(value->value.get()))
+        return;
+    }
+    auto currentValue = getValue(object, identifier);
+    assignValue(currentValue, value);
+}
+
+void Scope::assignValue(std::shared_ptr<Value> l, std::shared_ptr<Value> r)
+{
+    if(get_if<long long>(l->value.get()))
+    {
+        if(get_if<long long>(r->value.get()))
         {
-            currentValue->value = value->value;
+            l->value = r->value;
             return;
         }
     }
-    if(get_if<double>(currentValue->value.get()))
+    if(get_if<double>(l->value.get()))
     {
-        if(get_if<double>(value->value.get()))
+        if(get_if<double>(r->value.get()))
         {
-            currentValue->value = value->value;
+            l->value = r->value;
             return;
         }
     }
-    if(get_if<string>(currentValue->value.get()))
+    if(get_if<string>(l->value.get()))
     {
-        if(get_if<string>(value->value.get()))
+        if(get_if<string>(r->value.get()))
         {
-            currentValue->value = value->value;
+            l->value = r->value;
             return;
         }
     }
-    if(get_if<bool>(currentValue->value.get()))
+    if(get_if<bool>(l->value.get()))
     {
-        if(get_if<bool>(value->value.get()))
+        if(get_if<bool>(r->value.get()))
         {
-            currentValue->value = value->value;
+            l->value = r->value;
             return;
         }
     }
-    throw runtime_error("Cannot assign to "+identifier+" because of incompatible types "+ currentPos.toString());
+    if(get_if<shared_ptr<CustomType>>(l->value.get()))
+    {
+        if(get_if<shared_ptr<CustomType>>(r->value.get()))
+        {
+            l->value = r->value;
+            return;
+        }
+    }
+    throw runtime_error("Cannot assign to variable because of incompatible types "+ currentPos.toString());
+}
+
+void Scope::startTypeDefinition()
+{
+    newInstructionBlock();
+}
+
+std::map<std::string, std::shared_ptr<Value>> Scope::endTypeDefinition()
+{
+    std::map<std::string, std::shared_ptr<Value>> attributes = localScope.top()[localScope.top().size()-1];
+    endInstructionBlock();
+    return attributes;
 }

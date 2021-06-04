@@ -6,15 +6,28 @@
 #include <memory>
 #include <sstream>
 #include <math.h>
+#include <functional>
 
 #include "objects.h"
 
-
+struct FunDefinition;
+struct Statement;
 struct Value;
+
+typedef std::pair<std::shared_ptr<FunDefinition>, std::function<std::shared_ptr<Value>(std::shared_ptr<Statement>)>> FunctionEntry;
+typedef std::vector<FunctionEntry> FunctionVector;
+
+
 
 struct CustomType
 {
+    std::string typeName;
     std::map<std::string, std::shared_ptr<Value>> attributes;
+    std::map<std::string, bool> isPublic;
+    FunctionVector functions;
+
+    CustomType(std::string typeName, std::map<std::string, std::shared_ptr<Value>> attributes, std::map<std::string, bool>, FunctionVector functions)
+        :typeName(typeName), attributes(attributes), isPublic(isPublic), functions(functions) {}
 };
 
 

@@ -31,8 +31,6 @@ int Interpreter::execute()
 
 std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<Program> program)
 {
-    //cout<<"Evaluating program"<<endl;
-    //cout<<program->to_string()<<endl;
     shared_ptr<Value> returnValue;
     for(auto& element : program->program)
     {
@@ -53,7 +51,6 @@ std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<Program> program)
 
 std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<Statement> statement)
 {
-    //cout<<"Evaluating statement"<<endl;
     shared_ptr<Value> returnValue;
     if(statement->newBlock)
     {
@@ -76,14 +73,27 @@ std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<Statement> statemen
 
 std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<BinaryExpression> binaryExpression)
 {
-    //cout<<"Evaluating binary expression"<<endl;
     if(binaryExpression->op.type == T_ASSIGN)
     {
         if(auto identifier = get_if<shared_ptr<Identifier>>(&binaryExpression->lhs->expression))
         {
             scope.currentPos = binaryExpression->pos;
             auto newValue = evaluate(binaryExpression->rhs);
-            scope.assignValue((*identifier)->identifier, newValue);
+            if((*identifier)->object == "")
+            {
+                scope.assignValue((*identifier)->identifier, newValue);
+            }
+            else
+            {
+                if((*identifier)->object == "this")
+                {
+                    scope.assignValue(currentObject, (*identifier)->identifier, newValue);    
+                }
+                else
+                {
+                    scope.assignValue((*identifier)->object, (*identifier)->identifier, newValue);
+                }
+            }
             return newValue;
         }
         else
@@ -167,65 +177,117 @@ std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<BinaryExpression> b
     throw runtime_error("Could not evaluate binary expression: "+binaryExpression->pos.toString());
 }
 
+//TODO
 std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<FunCall> funCall)
 {
-    //cout<<"Evaluating Fun call"<<endl;
     vector<shared_ptr<Value>> argumentValues;
     for(auto &argument : funCall->arguments)
     {
         auto value = evaluate(argument);
         argumentValues.push_back(make_shared<Value>(*value));
     }
-    for(auto &function : functions)
+    if(funCall->object == "")
     {
-        bool accept = false;
-        try
+        for(auto &function : functions)
         {
-            accept = function.first->acceptFunCall(funCall->identifier, argumentValues);
+            bool accept = false;
+            try
+            {
+                accept = function.first->acceptFunCall(funCall->identifier, argumentValues);
+            }
+            catch(const std::exception& e)
+            {
+                throw runtime_error(string(e.what()) + " " + funCall->pos.toString());
+            }
+            if(accept)
+            {
+                return runFunction(function, funCall->identifier, argumentValues, funCall->pos);
+            }
         }
-        catch(const std::exception& e)
+        throw runtime_error("Unknown function "+funCall->identifier+" called: "+funCall->pos.toString());
+    }
+    else
+    {
+        scope.currentPos = funCall->pos;
+        shared_ptr<Value> valueObject;
+        if(funCall->object == "this")
         {
-            throw runtime_error(string(e.what()) + " " + funCall->pos.toString());
+            valueObject = scope.getValue(currentObject);
+        } 
+        else
+        {
+            valueObject = scope.getValue(funCall->object);
         }
-        
-        if(accept)
+        shared_ptr<CustomType> customTypeObject;
+        if(auto object = get_if<shared_ptr<CustomType>>(valueObject->value.get()))
         {
-            if(function.first->statement == nullptr)
+            customTypeObject = *object;
+        }
+        else
+        {
+            throw runtime_error("Could not get custom type object "+funCall->pos.toString());
+        }
+        for(auto &function : customTypeObject->functions)
+        {
+            bool accept = false;
+            try
             {
-                throw runtime_error("Declared but undefined function "+funCall->identifier+" called: "+funCall->pos.toString());
+                accept = function.first->acceptFunCall(funCall->identifier, argumentValues);
             }
-            shared_ptr<Value> retVal;
-            scope.currentPos = funCall->pos;
-            scope.newLevel();
-            scope.newInstructionBlock();
-            for(size_t i = 0; i < argumentValues.size(); ++i)
+            catch(const std::exception& e)
             {
-                scope.addVariable(function.first->arguments[i]->identifier, argumentValues[i]);
+                throw runtime_error(string(e.what()) + " " + funCall->pos.toString());
             }
-            retVal = function.second(function.first->statement);
-            scope.endInstructionBlock();
-            scope.endLevel();
-            accept = function.first->acceptReturnValue(retVal);
-            if(!accept)
+            if(accept)
             {
-                if(retVal != nullptr)
+                string oldCurrentObject = currentObject;
+                if(funCall->object != "this")
                 {
-                    throw runtime_error("Wrong type of returned value in function "+funCall->identifier+": "+funCall->pos.toString());
+                    currentObject = funCall->object;
                 }
-                else
-                {
-                    throw runtime_error("Expected a return statement in function "+funCall->identifier+": "+funCall->pos.toString());
-                }
+                auto retVal = runFunction(function, funCall->identifier, argumentValues, funCall->pos);
+                currentObject = oldCurrentObject;
+                return retVal;
             }
-            return retVal;
+        }
+        throw runtime_error("Unknown function "+funCall->object+"."+funCall->identifier+" called: "+funCall->pos.toString());
+    }
+}
+
+std::shared_ptr<Value> Interpreter::runFunction(FunctionEntry &function, string &identifier, vector<shared_ptr<Value>> &argumentValues, Position &pos)
+{
+    if(function.first->statement == nullptr)
+    {
+        throw runtime_error("Declared but undefined function "+identifier+" called: "+pos.toString());
+    }
+    shared_ptr<Value> retVal;
+    scope.currentPos = pos;
+    scope.newLevel();
+    scope.newInstructionBlock();
+    for(size_t i = 0; i < argumentValues.size(); ++i)
+    {
+        scope.addVariable(function.first->arguments[i]->identifier, argumentValues[i]);
+    }
+    retVal = function.second(function.first->statement);
+    scope.endInstructionBlock();
+    scope.endLevel();
+    bool accept = function.first->acceptReturnValue(retVal);
+    if(!accept)
+    {
+        if(retVal != nullptr)
+        {
+            throw runtime_error("Wrong type of returned value in function "+identifier+": "+pos.toString());
+        }
+        else
+        {
+            throw runtime_error("Expected a return statement in function "+identifier+": "+pos.toString());
         }
     }
-    throw runtime_error("Unknown function "+funCall->identifier+" called: "+funCall->pos.toString());
+    return retVal;
 }
 
 std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<Expression> expression)
 {
-    //cout<<"Evaluating expression"<<endl;
     shared_ptr<Value> returnValue;
     if(auto binaryExpression = get_if<shared_ptr<BinaryExpression>>(&expression->expression))
     {
@@ -276,14 +338,20 @@ std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<Literal> literal)
 
 std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<Identifier> identifier)
 {
-    //cout<<"Evaluating identifier"<<endl;
     scope.currentPos = identifier->pos;
-    return scope.getValue(identifier->identifier);
+    if(identifier->object == "")
+    {
+        return scope.getValue(identifier->identifier);
+    }
+    if(identifier->object == "this")
+    {
+        return scope.getValue(currentObject, identifier->identifier);    
+    }
+    return scope.getValue(identifier->object, identifier->identifier);
 }
 
 std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<Instruction> instruction)
 {
-    //cout<<"Evaluating instruction"<<endl;
     shared_ptr<Value> returnValue;
     if(auto expression = get_if<shared_ptr<Expression>>(&instruction->instruction))
     {
@@ -366,7 +434,6 @@ std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<ReturnStatement> re
 
 void Interpreter::evaluate(std::shared_ptr<Definition> definition)
 {
-    //cout<<"Evaluating definition"<<endl;
     if(auto funDefinition = get_if<shared_ptr<FunDefinition>>(&definition->definition))
     {
         evaluate(*funDefinition);
@@ -408,11 +475,29 @@ void Interpreter::evaluate(std::shared_ptr<FunDefinition> funDefinition)
 
 void Interpreter::evaluate(std::shared_ptr<TypeDefinition> typeDefinition)
 {
+    string typeIdentifier;
+    if(auto identifier = get_if<string>(&typeDefinition->type.value))
+    {
+        typeIdentifier = *identifier;
+    } 
+    else
+    {
+        throw runtime_error("Could not get the custom type identifier "+typeDefinition->pos.toString());
+    }
+    auto element = types.find(typeIdentifier);
+    if(element != types.end())
+    {
+        throw runtime_error("Type "+typeIdentifier+" already defined "+typeDefinition->pos.toString());
+    }
+    types.insert(make_pair(typeIdentifier, typeDefinition));
 }
 
 void Interpreter::evaluate(std::shared_ptr<VariableDeclaration> variableDeclaration)
 {
-    //cout<<"Evaluating variable declaration"<<endl;
+    if(variableDeclaration->identifier == "this")
+    {
+        throw runtime_error("Variable name \"this\" is not allowed "+variableDeclaration->pos.toString());
+    }
     scope.currentPos = variableDeclaration->pos;
     if(variableDeclaration->type.classType == KEYWORD_TOKEN)
     {
@@ -433,6 +518,49 @@ void Interpreter::evaluate(std::shared_ptr<VariableDeclaration> variableDeclarat
             default:
                 throw runtime_error("Unknown variable type "+variableDeclaration->pos.toString());
         }
+    }
+    else if(variableDeclaration->type.classType == IDENTIFIER_TOKEN)
+    {
+
+        string typeIdentifier;
+        if(auto identifier = get_if<string>(&variableDeclaration->type.value))
+        {
+            typeIdentifier = *identifier;
+        } 
+        else
+        {
+            throw runtime_error("Could not get the custom type identifier "+variableDeclaration->pos.toString());
+        }
+        auto typeDefinition = types.find(typeIdentifier);
+        if(typeDefinition == types.end())
+        {
+            throw runtime_error("Type "+typeIdentifier+" does not exist "+variableDeclaration->pos.toString());
+        }
+
+        scope.currentPos = variableDeclaration->pos;
+        std::map<std::string, bool> isPublic;
+        scope.startTypeDefinition();
+        for(auto &attribute : typeDefinition->second->variables)
+        {
+            evaluate(attribute);
+            isPublic.insert(make_pair(attribute->identifier, attribute->isPublic));
+        }
+        auto typeAttributes = scope.endTypeDefinition();
+
+        FunctionVector typeFunctions;
+
+        for(auto & function : typeDefinition->second->functions)
+        {
+            for(auto it = typeFunctions.begin(); it != typeFunctions.end(); ++it)
+            {
+                if(*function == *it->first)
+                {
+                    throw runtime_error("Function with identifier "+function->identifier+" and given arguments already exists: "+function->pos.toString());
+                }
+            }
+            typeFunctions.push_back(make_pair(function, std::bind_front(&Interpreter::evaluateCustomFunction, this)));
+        }
+        scope.addVariable(variableDeclaration->identifier, make_shared<Value>(make_shared<CustomType>(typeIdentifier, typeAttributes, isPublic, typeFunctions)));
     }
     if(variableDeclaration->expression != nullptr)
     {
