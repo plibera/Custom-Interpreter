@@ -23,11 +23,11 @@ y	\"	zz\nzz\n";
 # Operacje matematyczne
 Int a = (int1+int2) * int(float1+float2);
 println(a); #80
-Int b = int(bool1 + bool2);
+Int b = int(bool1) + int(bool2);
 println(b); #2
 Int c = (a+b)**2;
 println(c); #6724
 
 # Konkatenacja lancuchow znakow
-String str5 = str1 + str2 + str(c);
-println(str5); #"String56724"
+String str6 = str1 + str2 + str(c);
+println(str6); #"String56724"

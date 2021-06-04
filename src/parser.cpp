@@ -18,6 +18,7 @@ std::shared_ptr<Program> Parser::parse()
 {
     getNextToken();
     shared_ptr<Program> program = make_shared<Program>();
+    program->pos = Position(currentToken);
     std::shared_ptr<Definition> definition;
     std::shared_ptr<Statement> statement;
     variant<std::shared_ptr<Definition>, std::shared_ptr<Statement>> element;
@@ -52,6 +53,7 @@ std::shared_ptr<Definition> Parser::parseDefinition()
     if(typeDefinition = parseTypeDefinition())
     {
         definition = make_shared<Definition>();
+        definition->pos = Position(currentToken);
         definition->definition = typeDefinition;
         return definition;
     }
@@ -61,6 +63,7 @@ std::shared_ptr<Definition> Parser::parseDefinition()
 std::shared_ptr<Statement> Parser::parseStatement()
 {
     auto statement = make_shared<Statement>();
+    statement->pos = Position(currentToken);
     std::shared_ptr<Instruction> instruction;
     if(consume(KEYWORD_TOKEN, T_LEFTBRACKET))
     {
@@ -87,6 +90,7 @@ std::shared_ptr<Statement> Parser::parseStatement()
 std::shared_ptr<Instruction> Parser::parseInstruction()
 {
     shared_ptr<Instruction> instruction = make_shared<Instruction>();
+    instruction->pos = Position(currentToken);
     std::shared_ptr<IfStatement> ifStatement;
     std::shared_ptr<WhileStatement> whileStatement;
     std::shared_ptr<ReturnStatement> returnStatement;
@@ -135,6 +139,7 @@ shared_ptr<Expression> Parser::parseBinaryExpression(function<shared_ptr<Express
     int operatorClass, int operatorType, bool operationRightToLeft)
 {
     shared_ptr<BinaryExpression> binaryExpression = make_shared<BinaryExpression>();
+    binaryExpression->pos = Position(currentToken);
     shared_ptr<Expression> lhs;
     shared_ptr<Expression> rhs;
     vector<shared_ptr<Expression>> expressions;
@@ -169,13 +174,16 @@ shared_ptr<Expression> Parser::parseBinaryExpression(function<shared_ptr<Express
         for(int i = expressions.size() - 3; i >= 0; --i)
         {
             shared_ptr<Expression> prevExpression = make_shared<Expression>();
+            prevExpression->pos = Position(currentToken);
             prevExpression->expression = binaryExpression;
             binaryExpression = make_shared<BinaryExpression>();
+            binaryExpression->pos = Position(currentToken);
             binaryExpression->lhs = expressions[i];
             binaryExpression->op = operators[i];
             binaryExpression->rhs = prevExpression;
         }
         shared_ptr<Expression> result = make_shared<Expression>();
+        result->pos = Position(currentToken);
         result->expression = binaryExpression;
         return result;
     }
@@ -185,13 +193,16 @@ shared_ptr<Expression> Parser::parseBinaryExpression(function<shared_ptr<Express
     for(int i = 1; i < expressions.size() - 1; ++i)
     {
         shared_ptr<Expression> prevExpression = make_shared<Expression>();
+        prevExpression->pos = Position(currentToken);
         prevExpression->expression = binaryExpression;
         binaryExpression = make_shared<BinaryExpression>();
+        binaryExpression->pos = Position(currentToken);
         binaryExpression->lhs = prevExpression;
         binaryExpression->op = operators[i];
         binaryExpression->rhs = expressions[i+1];
     }
     shared_ptr<Expression> result = make_shared<Expression>();
+    result->pos = Position(currentToken);
     result->expression = binaryExpression;
     return result;
 }
@@ -256,9 +267,13 @@ std::shared_ptr<Expression> Parser::parseAddExpression()
     if(accept(OPERATOR_TOKEN, T_ADD) && (opId = get_if<long long>(&currentToken.value)) && *opId == operatorIdMap.at("-"))
     {
         auto exp = make_shared<Expression>();
+        exp->pos = Position(currentToken);
         auto binExp = make_shared<BinaryExpression>();
+        binExp->pos = Position(currentToken);
         auto lhs = make_shared<Expression>();
+        lhs->pos = Position(currentToken);
         shared_ptr<Literal> literal = make_shared<Literal>();
+        literal->pos = Position(currentToken);
         literal->literal = Token(LITERAL_TOKEN, T_INT_LIT, currentToken.position, currentToken.lineNumber, currentToken.linePosition, (long long)0);
         lhs->expression = literal;
         binExp->lhs = lhs;
@@ -305,8 +320,10 @@ std::shared_ptr<Expression> Parser::parseLiteral()
     if(currentToken.classType != LITERAL_TOKEN && !accept(KEYWORD_TOKEN, T_TRUE) && !accept(KEYWORD_TOKEN, T_FALSE))
         return nullptr;
     shared_ptr<Literal> literal = make_shared<Literal>();
+    literal->pos = Position(currentToken);
     literal->literal = currentToken;
     shared_ptr<Expression> expression = make_shared<Expression>();
+    expression->pos = Position(currentToken);
     expression->expression = literal;
     getNextToken();
     return expression;
@@ -337,9 +354,11 @@ std::shared_ptr<Expression> Parser::parseIdentifierOrFunctionCall()
     {
         //Parse identifier
         shared_ptr<Identifier> identifier = make_shared<Identifier>();
+        identifier->pos = Position(currentToken);
         identifier->object = object;
         identifier->identifier = idStr;
         shared_ptr<Expression> expression = make_shared<Expression>();
+        expression->pos = Position(currentToken);
         expression->expression = identifier;
         return expression;
     }
@@ -347,6 +366,7 @@ std::shared_ptr<Expression> Parser::parseIdentifierOrFunctionCall()
     //Parse function call
 
     shared_ptr<FunCall> funCall = make_shared<FunCall>();
+    funCall->pos = Position(currentToken);
     funCall->object = object;
     funCall->identifier = idStr;
     shared_ptr<Expression> expression;
@@ -371,6 +391,7 @@ std::shared_ptr<Expression> Parser::parseIdentifierOrFunctionCall()
     expect(KEYWORD_TOKEN, T_RIGHTPAREN, "Expected ')': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
 
     expression = make_shared<Expression>();
+    expression->pos = Position(currentToken);
     expression->expression = funCall;
     return expression;
 }
@@ -382,6 +403,7 @@ std::shared_ptr<IfStatement> Parser::parseIfStatement()
     expect(KEYWORD_TOKEN, T_LEFTPAREN, "Expected '(' after 'if': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
     
     shared_ptr<IfStatement> ifStatement = make_shared<IfStatement>();
+    ifStatement->pos = Position(currentToken);
     if(!(ifStatement->condition = parseExpression()))
         throw runtime_error("Expected condition expression after '(': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
     expect(KEYWORD_TOKEN, T_RIGHTPAREN, "Expected ')' after condition: "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
@@ -404,6 +426,7 @@ std::shared_ptr<WhileStatement> Parser::parseWhileStatement()
     expect(KEYWORD_TOKEN, T_LEFTPAREN, "Expected '(' after 'while': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
     
     shared_ptr<WhileStatement> whileStatement = make_shared<WhileStatement>();
+    whileStatement->pos = Position(currentToken);
     
     if(!(whileStatement->condition = parseExpression()))
         throw runtime_error("Expected condition expression after '(': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
@@ -421,6 +444,7 @@ std::shared_ptr<ReturnStatement> Parser::parseReturnStatement()
         return nullptr;
 
     shared_ptr<ReturnStatement> returnStatement = make_shared<ReturnStatement>();
+    returnStatement->pos = Position(currentToken);
     returnStatement->expression = parseExpression();
     return returnStatement;
 }
@@ -447,6 +471,7 @@ std::shared_ptr<Definition> Parser::parseIdentifierOrFunctionDefinition(bool for
         
         //Parse identifier
         shared_ptr<VariableDeclaration> variableDeclatation = make_shared<VariableDeclaration>();
+        variableDeclatation->pos = Position(currentToken);
         variableDeclatation->type = type;
         variableDeclatation->identifier = identifier;
         if(consume(OPERATOR_TOKEN, T_ASSIGN))
@@ -463,6 +488,7 @@ std::shared_ptr<Definition> Parser::parseIdentifierOrFunctionDefinition(bool for
         if(!forceIdentifier)
             expect(KEYWORD_TOKEN, T_SEMICOLON, "Expected ';': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
         shared_ptr<Definition> definition = make_shared<Definition>();
+        definition->pos = Position(currentToken);
         definition->definition = variableDeclatation;
         return definition;
     }
@@ -475,6 +501,7 @@ std::shared_ptr<Definition> Parser::parseIdentifierOrFunctionDefinition(bool for
     //Parse function definition/declaration
 
     shared_ptr<FunDefinition> funDefinition = make_shared<FunDefinition>();
+    funDefinition->pos = Position(currentToken);
     funDefinition->type = type;
     funDefinition->identifier = identifier;
     shared_ptr<Definition> definition;
@@ -511,6 +538,7 @@ std::shared_ptr<Definition> Parser::parseIdentifierOrFunctionDefinition(bool for
         expect(KEYWORD_TOKEN, T_SEMICOLON, "Expected ';': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
     }
     definition = make_shared<Definition>();
+    definition->pos = Position(currentToken);
     definition->definition = funDefinition;
     return definition;
 }
@@ -522,6 +550,7 @@ std::shared_ptr<TypeDefinition> Parser::parseTypeDefinition()
     if(!accept(IDENTIFIER_TOKEN, T_TYPE))
         throw runtime_error("Expected custom type identifier after 'class': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
     shared_ptr<TypeDefinition> typeDefinition = make_shared<TypeDefinition>();
+    typeDefinition->pos = Position(currentToken);
     typeDefinition->type = currentToken;
     getNextToken();
 

@@ -20,6 +20,8 @@ struct Scope
 
     Scope(int maxStackSize = 500);
 
+    Position currentPos;
+
     void newInstructionBlock();
     void endInstructionBlock();
     void newLevel();

@@ -15,6 +15,8 @@ class Interpreter
 {
     Parser parser;
     Scope scope;
+    std::vector<std::pair<std::shared_ptr<FunDefinition>, std::function<std::shared_ptr<Value>(std::shared_ptr<Statement>)>>> functions;
+
     //Value returned by the last execution
     std::shared_ptr<Value> lastReturnValue;
 
@@ -25,6 +27,15 @@ class Interpreter
     std::shared_ptr<Value> evaluate(std::shared_ptr<IfStatement> element);
     std::shared_ptr<Value> evaluate(std::shared_ptr<WhileStatement> element);
     std::shared_ptr<Value> evaluate(std::shared_ptr<ReturnStatement> element);
+
+    //Functions used to perform function calls of custom functions and embedded functions
+    std::shared_ptr<Value> evaluateCustomFunction(std::shared_ptr<Statement> statement);
+    std::shared_ptr<Value> evaluatePrintFunction(std::shared_ptr<Statement> statement);
+    std::shared_ptr<Value> evaluatePrintlnFunction(std::shared_ptr<Statement> statement);
+    std::shared_ptr<Value> evaluateStrFunction(std::shared_ptr<Statement> statement);
+    std::shared_ptr<Value> evaluateFloatFunction(std::shared_ptr<Statement> statement);
+    std::shared_ptr<Value> evaluateIntFunction(std::shared_ptr<Statement> statement);
+    std::shared_ptr<Value> evaluateBoolFunction(std::shared_ptr<Statement> statement);
 
     //These evaluations return the evaluated value
     std::shared_ptr<Value> evaluate(std::shared_ptr<BinaryExpression> element);
@@ -39,8 +50,12 @@ class Interpreter
     void evaluate(std::shared_ptr<TypeDefinition> element);
     void evaluate(std::shared_ptr<VariableDeclaration> element);
 
+    void createEmbeddedFunctions();
+    //Creates and adds a function with a given name and callback with a single argument of type Int, Float, String or Bool
+    void createEmbeddedFunction(std::string identifier, Token type, std::function<std::shared_ptr<Value>(std::shared_ptr<Statement>)> callback);
+
 public:
-    Interpreter(std::istream& stream) : parser(stream) {}
+    Interpreter(std::istream& stream) : parser(stream) { createEmbeddedFunctions(); }
 
     int execute();
 

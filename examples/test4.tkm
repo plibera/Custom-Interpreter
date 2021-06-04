@@ -1,0 +1,30 @@
+Int dodaj(Int a, Int b)
+{
+    return a + b;
+}
+
+# Argumenty przekazywane przez wartosc
+Int dodaj5(Int a)
+{
+    a = a + 5;
+    return a;
+}
+
+Int a = 2;
+Int b = dodaj(a, 4);
+Int c = dodaj5(a);
+
+println(a); # 2
+println(b); # 6
+println(c); # 7
+
+
+# Rekurencja
+
+Int silnia(Int n)
+{
+    if(n <= 1) { return 1; }
+    return n*silnia(n-1);
+}
+
+println(silnia(5)); # 120

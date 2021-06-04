@@ -135,8 +135,12 @@ struct Token
     Token(int classType, int type, int pos, int lineNum, int linePos, std::string value)
     : classType(classType), type(type), position(pos), lineNumber(lineNum), linePosition(linePos), value(value) {}
 
-    bool operator==(Token &other);
-    bool operator==(Token &&other);
+    bool operator==(const Token &other);
+    bool operator==(const Token &&other);
+    bool operator!=(const Token &other);
+    bool operator!=(const Token &&other);
+
+    void resetPosition();
 
     const std::string toString();
     const std::string keywordToString();

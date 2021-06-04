@@ -3,6 +3,109 @@
 using namespace std;
 
 
+bool areOfCorrespondingType(Token &token, std::shared_ptr<Value> value)
+{
+    if(token.classType == KEYWORD_TOKEN)
+    {
+        switch(token.type)
+        {
+            case T_INT:
+                if(!(get_if<long long>(value->value.get())))
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            case T_FLOAT:
+                if(!(get_if<double>(value->value.get())))
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            case T_STRING:
+                if(!(get_if<string>(value->value.get())))
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            case T_BOOL:
+                if(!(get_if<bool>(value->value.get())))
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            case T_VOID:
+                throw runtime_error("Void function cannot return value");
+            default:
+                throw runtime_error("Unknown variable type");
+        }
+    }
+    return false;
+}
+
+
+bool FunDefinition::operator==(const FunDefinition& r)
+{
+    if(identifier != r.identifier)
+        return false;
+    if(arguments.size() != r.arguments.size())
+        return false;
+    for(size_t i = 0; i < arguments.size(); ++i)
+    {
+        arguments[i]->type.resetPosition();
+        r.arguments[i]->type.resetPosition();
+        if(arguments[i]->type != r.arguments[i]->type)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool FunDefinition::acceptFunCall(std::string calledIdentifier, std::vector<std::shared_ptr<Value>> &argValues)
+{
+    if(identifier != calledIdentifier)
+    {
+        return false;
+    }
+    if(arguments.size() != argValues.size())
+    {
+        return false;
+    }
+    for(size_t i = 0; i < arguments.size(); ++i)
+    {
+        if(!areOfCorrespondingType(arguments[i]->type, argValues[i]))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool FunDefinition::acceptReturnValue(std::shared_ptr<Value> value)
+{
+    if(value == nullptr)
+    {
+        return type.classType == KEYWORD_TOKEN && type.type == T_VOID;
+    }
+    if(value->value == nullptr)
+    {
+        return type.classType == KEYWORD_TOKEN && type.type == T_VOID;
+    }
+    return areOfCorrespondingType(type, value);
+}
+
 std::string makeIndent(int indent)
 {
     std::stringstream ss;

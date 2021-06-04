@@ -3,7 +3,7 @@
 
 using namespace std;
 
-bool Token::operator==(Token &other)
+bool Token::operator==(const Token &other)
 {
     if(classType != other.classType)
     {
@@ -38,10 +38,29 @@ bool Token::operator==(Token &other)
     return true;
 }
 
-bool Token::operator==(Token &&other)
+bool Token::operator==(const Token &&other)
 {
     Token t = other;
     return operator==(t);
+}
+
+bool Token::operator!=(const Token &other)
+{
+    return !operator==(other);
+}
+
+bool Token::operator!=(const Token &&other)
+{
+    Token t = other;
+    return operator!=(t);
+}
+
+
+void Token::resetPosition()
+{
+    position = 0;
+    lineNumber = 0;
+    linePosition = 0;
 }
 
 const std::string Token::toString()

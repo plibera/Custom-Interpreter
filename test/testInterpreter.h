@@ -162,7 +162,10 @@ TEST(InterpreterTest, preventsRedefinition2) {
     std::stringstream ss;
     ss<<"Int a = 5; {Int a = 7;} return a;";
     Interpreter interpreter(ss);    
-    ASSERT_THROW(interpreter.execute(), std::runtime_error);
+    interpreter.execute();
+    long long *value;
+    ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, 5);
 }
 
 TEST(InterpreterTest, preventsRedefinition3) {
@@ -183,6 +186,16 @@ TEST(InterpreterTest, interpretsIf) {
     long long *value;
     ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
     ASSERT_EQ(*value, 5);
+}
+
+TEST(InterpreterTest, interpretsIf2) {
+    std::stringstream ss;
+    ss<<"Int a = 3; if(a < 3) { a = 5; } else {a = 8;} return a;";
+    Interpreter interpreter(ss);    
+    interpreter.execute();
+    long long *value;
+    ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, 8);
 }
 
 TEST(InterpreterTest, interpretsWhile) {
@@ -220,4 +233,197 @@ TEST(InterpreterTest, interpretsWhile4) {
     long long *value;
     ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
     ASSERT_EQ(*value, 0);
+}
+
+TEST(InterpreterTest, interpretsPrint) {
+    std::stringstream ss;
+    ss<<"print(\"Test\");";
+    Interpreter interpreter(ss);
+
+    std::stringstream buffer;
+    std::streambuf *sbuf = std::cout.rdbuf();
+    std::cout.rdbuf(buffer.rdbuf());
+
+    interpreter.execute();
+    std::string output = buffer.str();
+
+    std::cout.rdbuf(sbuf);
+
+    ASSERT_EQ(output, "Test");
+}
+
+TEST(InterpreterTest, interpretsPrintln) {
+    std::stringstream ss;
+    ss<<"println(\"Test\");";
+    Interpreter interpreter(ss);
+
+    std::stringstream buffer;
+    std::streambuf *sbuf = std::cout.rdbuf();
+    std::cout.rdbuf(buffer.rdbuf());
+
+    interpreter.execute();
+    std::string output = buffer.str();
+
+    std::cout.rdbuf(sbuf);
+
+    ASSERT_EQ(output, "Test\n");
+}
+
+TEST(InterpreterTest, interpretsStrFunction) {
+    std::stringstream ss;
+    ss<<"return str(5);";
+    Interpreter interpreter(ss);    
+    interpreter.execute();
+    std::string *value;
+    ASSERT_TRUE(value = std::get_if<std::string>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, "5");
+}
+
+TEST(InterpreterTest, interpretsIntFunction) {
+    std::stringstream ss;
+    ss<<"return int(\"10\");";
+    Interpreter interpreter(ss);    
+    interpreter.execute();
+    long long *value;
+    ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, 10);
+}
+
+TEST(InterpreterTest, interpretsIntFunction2) {
+    std::stringstream ss;
+    ss<<"return int(10.3);";
+    Interpreter interpreter(ss);    
+    interpreter.execute();
+    long long *value;
+    ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, 10);
+}
+
+TEST(InterpreterTest, interpretsFloatFunction) {
+    std::stringstream ss;
+    ss<<"return float(\"10.5\");";
+    Interpreter interpreter(ss);    
+    interpreter.execute();
+    double *value;
+    ASSERT_TRUE(value = std::get_if<double>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, 10.5);
+}
+
+TEST(InterpreterTest, interpretsFloatFunction2) {
+    std::stringstream ss;
+    ss<<"return float(10);";
+    Interpreter interpreter(ss);    
+    interpreter.execute();
+    double *value;
+    ASSERT_TRUE(value = std::get_if<double>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, 10.0);
+}
+
+TEST(InterpreterTest, interpretsBoolFunction) {
+    std::stringstream ss;
+    ss<<"return bool(\"true\");";
+    Interpreter interpreter(ss);    
+    interpreter.execute();
+    bool *value;
+    ASSERT_TRUE(value = std::get_if<bool>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_TRUE(*value);
+}
+
+TEST(InterpreterTest, interpretsBoolFunction2) {
+    std::stringstream ss;
+    ss<<"return bool(1);";
+    Interpreter interpreter(ss);    
+    interpreter.execute();
+    bool *value;
+    ASSERT_TRUE(value = std::get_if<bool>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_TRUE(*value);
+}
+
+TEST(InterpreterTest, interpretsCustomFunction) {
+    std::stringstream ss;
+    ss<<"Int mul(Int a, Int b) { return a*b; } return mul(2, 2);";
+    Interpreter interpreter(ss);    
+    interpreter.execute();
+    long long *value;
+    ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, 4);
+}
+
+TEST(InterpreterTest, missingFunctionReturn) {
+    std::stringstream ss;
+    ss<<"Int mul(Int a, Int b) { Int c = a*b; } mul(1, 2); return 0;";
+    Interpreter interpreter(ss);    
+    ASSERT_THROW(interpreter.execute(), std::runtime_error);
+}
+
+TEST(InterpreterTest, voidFunctionReturn) {
+    std::stringstream ss;
+    ss<<"Void mul(Int a, Int b) { return a*b; } return mul(2, 2);";
+    Interpreter interpreter(ss);    
+    ASSERT_THROW(interpreter.execute(), std::runtime_error);
+}
+
+TEST(InterpreterTest, preventsInfiniteRecursion) {
+    std::stringstream ss;
+    ss<<"Int mul(Int a, Int b) { return mul(a, b+1); } return mul(2, 2);";
+    Interpreter interpreter(ss);    
+    ASSERT_THROW(interpreter.execute(), std::runtime_error);
+}
+
+TEST(InterpreterTest, interpretsCustomFunction2) {
+    std::stringstream ss;
+    ss<<"Int mul(Int a, Int b) { return a*b; } return mul(2, 2);";
+    Interpreter interpreter(ss);    
+    interpreter.execute();
+    long long *value;
+    ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, 4);
+}
+
+TEST(InterpreterTest, interpretsCustomFunction3) {
+    std::stringstream ss;
+    ss<<"Int f() { Int a = 0; while( a < 10 ) { a = a + 1; if(a > 5) { return a; }} return 0;} return f();";
+    Interpreter interpreter(ss);    
+    interpreter.execute();
+    long long *value;
+    ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, 6);
+}
+
+TEST(InterpreterTest, interpretsCustomFunction4) {
+    std::stringstream ss;
+    ss<<"Int f(Bool a) { if(a) return 5; } return f(true);";
+    Interpreter interpreter(ss);    
+    interpreter.execute();
+    long long *value;
+    ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, 5);
+}
+
+TEST(InterpreterTest, interpretsCustomFunction5) {
+    std::stringstream ss;
+    ss<<"Int f(Bool a) { if(a) return 5; } return f(false);";
+    Interpreter interpreter(ss);    
+    ASSERT_THROW(interpreter.execute(), std::runtime_error);
+}
+
+TEST(InterpreterTest, wrongFunCall) {
+    std::stringstream ss;
+    ss<<"Int f(Bool a) { if(a) return 5; } return f();";
+    Interpreter interpreter(ss);    
+    ASSERT_THROW(interpreter.execute(), std::runtime_error);
+}
+
+TEST(InterpreterTest, wrongFunCall2) {
+    std::stringstream ss;
+    ss<<"Int f(Bool a) { if(a) return 5; } Int a; return f(a);";
+    Interpreter interpreter(ss);    
+    ASSERT_THROW(interpreter.execute(), std::runtime_error);
+}
+
+TEST(InterpreterTest, wrongFunCall3) {
+    std::stringstream ss;
+    ss<<"Int f(Bool a) { if(a) return 5; } return f(true, false);";
+    Interpreter interpreter(ss);    
+    ASSERT_THROW(interpreter.execute(), std::runtime_error);
 }

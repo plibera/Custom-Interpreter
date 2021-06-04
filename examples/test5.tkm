@@ -1,0 +1,107 @@
+#Klasa reprezentujaca punkt
+class Punkt
+{
+    #Dwa publiczne atrybuty
+    public Float x;
+    public Float y;
+
+    public Punkt punkt(Float x, Float y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+};
+
+#Klasa reprezentujaca trojkat
+class Trojkat
+{
+    #Atrybuty prywatne
+    Punkt a;
+    Punkt b;
+    Punkt c;
+    Float sideA; #Aktualne dlugosci bokow trojkata
+    Float sideB;
+    Float sideC;
+
+    # Prywatna metoda na nowo obliczajaca dlugosci bokow trojkata
+    Void zaktualizujBoki()
+    {
+        sideA = ((a.x-b.x)**2 + (a.y-b.y)**2)**0.5;
+        sideB = ((b.x-c.x)**2 + (b.y-c.y)**2)**0.5;
+        sideC = ((c.x-a.x)**2 + (c.y-a.y)**2)**0.5;
+    }
+
+
+    public Trojkat trojkat(Punkt na, Punkt nb, Punkt nc) {
+        a = na;
+        b = nb;
+        c = nc;
+        zaktualizujBoki();        
+    }
+
+    public Void setA(Punkt na)
+    {
+        a = na;
+        zaktualizujBoki();
+    }
+    
+    public Void setB(Punkt nb)
+    {
+        b = nb;
+        zaktualizujBoki();
+    }
+
+    public Void setC(Punkt nc)
+    {
+        c = nc;
+        zaktualizujBoki();
+    }
+
+    public Float obwod(){
+        return sideA + sideB + sideC;
+    }
+
+    public Float pole(){
+        Float s = obwod()/2;
+        return (s*(s - sideA)*(s - sideB)*(s - c))**0.5;
+    }
+};
+
+
+
+Punkt a;
+a.x = 5;
+a.y = 5;
+Punkt b;
+b.x = 0.0;
+b.y = 6.2;
+Punkt c;
+c.x = 3.2;
+c.y = -4.8;
+Trojkat t;
+t.setA(a);
+t.setB(b);
+t.setC(c);
+Float pole = t.pole();
+println("Pole trojkata to " + str(pole));
+a.x = 20;
+if(t.pole != pole)
+{
+    println("Cos nie tak, tu pole nie powinno sie zmienic");
+}    
+else
+{
+    println("Pole sie nie zmienilo");
+}
+t.setA(a);
+if(t.pole != pole)
+{
+    String komunikat = "Pole trojkata zmienilo sie. Teraz jest rowne ";
+    String poleStr = str(t.pole);
+    komunikat = komunikat + poleStr;
+    println(komunikat);
+}    
+else
+{
+    println("Cos nie tak, pole sie nie zmienilo");
+}
