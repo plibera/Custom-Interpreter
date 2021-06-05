@@ -39,6 +39,7 @@ class Parser
     bool consume(int operatorClass, int operatorType);
     bool expect(int operatorClass, int operatorType, std::string msg);
 
+    void generateError(std::string msg);
 
     std::shared_ptr<Expression> parseLiteral();
     std::shared_ptr<Expression> parseIdentifierOrFunctionCall();

@@ -14,6 +14,11 @@ Token Parser::getNextToken() {
     return currentToken;
 }
 
+void Parser::generateError(std::string msg)
+{
+    throw runtime_error(msg+" Line:"+to_string(currentToken.lineNumber+1)+" pos:"+to_string(currentToken.linePosition));
+}
+
 std::shared_ptr<Program> Parser::parse()
 {
     getNextToken();
@@ -36,7 +41,7 @@ std::shared_ptr<Program> Parser::parse()
             program->program.push_back(element);
             continue;
         }
-        throw runtime_error("Error: not a definition or a statement: "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+        generateError("Error: not a definition or a statement");
     }
     return program;
 }
@@ -72,7 +77,7 @@ std::shared_ptr<Statement> Parser::parseStatement()
             if(instruction = parseInstruction())
                 statement->instructions.push_back(instruction);
             else
-                throw runtime_error("Error parsing instruction inside the statement: "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+                generateError("Error parsing instruction inside the statement ");
         }
     }
     else
@@ -110,19 +115,19 @@ std::shared_ptr<Instruction> Parser::parseInstruction()
     if(returnStatement = parseReturnStatement())
     {
         instruction->instruction = returnStatement;
-        expect(KEYWORD_TOKEN, T_SEMICOLON, "Expected ';': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+        expect(KEYWORD_TOKEN, T_SEMICOLON, "Expected ';'");
         return instruction;
     }
     if(definition = parseIdentifierOrFunctionDefinition(true))
     {
         instruction->instruction = get<shared_ptr<VariableDeclaration>>(definition->definition);
-        expect(KEYWORD_TOKEN, T_SEMICOLON, "Expected ';': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+        expect(KEYWORD_TOKEN, T_SEMICOLON, "Expected ';'");
         return instruction;
     }
     if(expression = parseExpression())
     {
         instruction->instruction = expression;
-        expect(KEYWORD_TOKEN, T_SEMICOLON, "Expected ';': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+        expect(KEYWORD_TOKEN, T_SEMICOLON, "Expected ';'");
         return instruction;
     }
     return nullptr;
@@ -172,7 +177,7 @@ shared_ptr<Expression> Parser::parseBinaryExpression(function<shared_ptr<Express
         currentOperator = currentToken;
         getNextToken();
         if(!(rhs = parseChildExpression()))
-            throw runtime_error("Expected expression at "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+            generateError("Expected expression");
         operators.push_back(currentOperator);
         expressions.push_back(rhs);
     }
@@ -247,7 +252,8 @@ bool Parser::expect(int operatorClass, int operatorType, string msg)
         getNextToken();
         return true;
     }
-    throw runtime_error(msg);
+    generateError(msg);
+    return false;
 }
 
 std::shared_ptr<Expression> Parser::parseAssignExpression()
@@ -320,7 +326,7 @@ std::shared_ptr<Expression> Parser::parsePrimaryExpression()
     {
         expression = parseAssignExpression();
         if(!consume(KEYWORD_TOKEN, T_RIGHTPAREN))
-            throw runtime_error("')' expected");
+            generateError("')' expected");
         return expression;
     }
     if(expression = parseLiteral())
@@ -358,7 +364,7 @@ std::shared_ptr<Expression> Parser::parseIdentifierOrFunctionCall()
         idStr = "";
 
         if(!accept(IDENTIFIER_TOKEN, T_VAR))
-            throw runtime_error("Expected identifier after '.': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+            generateError("Expected identifier after '.'");
 
         idStr = get<string>(currentToken.value);
         getNextToken();
@@ -395,14 +401,14 @@ std::shared_ptr<Expression> Parser::parseIdentifierOrFunctionCall()
             }
             else
             {
-                throw runtime_error("Expected expression after ',': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+                generateError("Expected expression after ','");
             }
         }
         firstArgument = false;
         funCall->arguments.push_back(expression);
     } while(consume(KEYWORD_TOKEN, T_COMMA));
 
-    expect(KEYWORD_TOKEN, T_RIGHTPAREN, "Expected ')': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+    expect(KEYWORD_TOKEN, T_RIGHTPAREN, "Expected ')'");
 
     expression = make_shared<Expression>();
     expression->pos = Position(currentToken);
@@ -414,20 +420,20 @@ std::shared_ptr<IfStatement> Parser::parseIfStatement()
 {
     if(!consume(KEYWORD_TOKEN, T_IF))
         return nullptr;
-    expect(KEYWORD_TOKEN, T_LEFTPAREN, "Expected '(' after 'if': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+    expect(KEYWORD_TOKEN, T_LEFTPAREN, "Expected '(' after 'if'");
     
     shared_ptr<IfStatement> ifStatement = make_shared<IfStatement>();
     ifStatement->pos = Position(currentToken);
     if(!(ifStatement->condition = parseExpression()))
-        throw runtime_error("Expected condition expression after '(': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
-    expect(KEYWORD_TOKEN, T_RIGHTPAREN, "Expected ')' after condition: "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+        generateError("Expected condition expression after '('");
+    expect(KEYWORD_TOKEN, T_RIGHTPAREN, "Expected ')' after condition");
 
     if(!(ifStatement->statementTrue = parseStatement()))
-        throw runtime_error("Expected statement after ')': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+        generateError("Expected statement after ')'");
     if(consume(KEYWORD_TOKEN, T_ELSE))
     {
         if(!(ifStatement->statementFalse = parseStatement()))
-            throw runtime_error("Expected statement after 'else': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+            generateError("Expected statement after 'else'");
     }
     return ifStatement;
 }
@@ -437,18 +443,18 @@ std::shared_ptr<WhileStatement> Parser::parseWhileStatement()
     if(!consume(KEYWORD_TOKEN, T_WHILE))
         return nullptr;
 
-    expect(KEYWORD_TOKEN, T_LEFTPAREN, "Expected '(' after 'while': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+    expect(KEYWORD_TOKEN, T_LEFTPAREN, "Expected '(' after 'while'");
     
     shared_ptr<WhileStatement> whileStatement = make_shared<WhileStatement>();
     whileStatement->pos = Position(currentToken);
     
     if(!(whileStatement->condition = parseExpression()))
-        throw runtime_error("Expected condition expression after '(': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+        generateError("Expected condition expression after '('");
     
-    expect(KEYWORD_TOKEN, T_RIGHTPAREN, "Expected ')' after condition: "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+    expect(KEYWORD_TOKEN, T_RIGHTPAREN, "Expected ')' after condition");
 
     if(!(whileStatement->statement = parseStatement()))
-        throw runtime_error("Expected statement after ')': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+        generateError("Expected statement after ')'");
     return whileStatement;
 }
 
@@ -473,7 +479,7 @@ std::shared_ptr<Definition> Parser::parseIdentifierOrFunctionDefinition(bool for
     getNextToken();
 
     if(!accept(IDENTIFIER_TOKEN, T_VAR))
-        throw runtime_error("Expected identifier after type: "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+        generateError("Expected identifier after type");
     
     string identifier = get<string>(currentToken.value);
     getNextToken();
@@ -481,7 +487,7 @@ std::shared_ptr<Definition> Parser::parseIdentifierOrFunctionDefinition(bool for
     if(!accept(KEYWORD_TOKEN, T_LEFTPAREN))
     {
         if(accept(KEYWORD_TOKEN, T_VOID))
-            throw runtime_error("Identifier of type Void not allowed: "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+            generateError("Identifier of type Void not allowed");
         
         //Parse identifier
         shared_ptr<VariableDeclaration> variableDeclatation = make_shared<VariableDeclaration>();
@@ -496,11 +502,11 @@ std::shared_ptr<Definition> Parser::parseIdentifierOrFunctionDefinition(bool for
                 variableDeclatation->expression = expression;
             }
             else
-                throw runtime_error("Expected expression after '=': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+                generateError("Expected expression after '='");
         }
 
         if(!forceIdentifier)
-            expect(KEYWORD_TOKEN, T_SEMICOLON, "Expected ';': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+            expect(KEYWORD_TOKEN, T_SEMICOLON, "Expected ';'");
         shared_ptr<Definition> definition = make_shared<Definition>();
         definition->pos = Position(currentToken);
         definition->definition = variableDeclatation;
@@ -508,7 +514,7 @@ std::shared_ptr<Definition> Parser::parseIdentifierOrFunctionDefinition(bool for
     }
 
     if(forceIdentifier)
-        throw runtime_error("Unexpected function declaration: "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+        generateError("Unexpected function declaration");
     
     getNextToken();
 
@@ -531,7 +537,7 @@ std::shared_ptr<Definition> Parser::parseIdentifierOrFunctionDefinition(bool for
             }
             else
             {
-                throw runtime_error("Expected parameter declaration after ',': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+                generateError("Expected parameter declaration after ','");
             }
         }
         firstArgument = false;
@@ -539,7 +545,7 @@ std::shared_ptr<Definition> Parser::parseIdentifierOrFunctionDefinition(bool for
         funDefinition->arguments.push_back(variableDeclaration);
     } while(consume(KEYWORD_TOKEN, T_COMMA));
 
-    expect(KEYWORD_TOKEN, T_RIGHTPAREN, "Expected ')': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+    expect(KEYWORD_TOKEN, T_RIGHTPAREN, "Expected ')'");
 
     shared_ptr<Statement> statement;
     if(accept(KEYWORD_TOKEN, T_LEFTBRACKET))
@@ -549,7 +555,7 @@ std::shared_ptr<Definition> Parser::parseIdentifierOrFunctionDefinition(bool for
     }
     else
     {
-        expect(KEYWORD_TOKEN, T_SEMICOLON, "Expected ';': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+        expect(KEYWORD_TOKEN, T_SEMICOLON, "Expected ';'");
     }
     definition = make_shared<Definition>();
     definition->pos = Position(currentToken);
@@ -562,13 +568,13 @@ std::shared_ptr<TypeDefinition> Parser::parseTypeDefinition()
     if(!consume(KEYWORD_TOKEN, T_CLASS))
         return nullptr;
     if(!accept(IDENTIFIER_TOKEN, T_TYPE))
-        throw runtime_error("Expected custom type identifier after 'class': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+        generateError("Expected custom type identifier after 'class'");
     shared_ptr<TypeDefinition> typeDefinition = make_shared<TypeDefinition>();
     typeDefinition->pos = Position(currentToken);
     typeDefinition->type = currentToken;
     getNextToken();
 
-    expect(KEYWORD_TOKEN, T_LEFTBRACKET, "Expected '{': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+    expect(KEYWORD_TOKEN, T_LEFTBRACKET, "Expected '{'");
 
     shared_ptr<Definition> definition;
     shared_ptr<FunDefinition> funDefinition;
@@ -578,7 +584,7 @@ std::shared_ptr<TypeDefinition> Parser::parseTypeDefinition()
     {
         isPublic = consume(KEYWORD_TOKEN, T_PUBLIC);
         if(!(definition = parseIdentifierOrFunctionDefinition()))
-            throw runtime_error("Expected '}': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+            generateError("Expected '}'");
         switch(definition->definition.index())
         {
             case 0:
@@ -592,9 +598,9 @@ std::shared_ptr<TypeDefinition> Parser::parseTypeDefinition()
                 typeDefinition->variables.push_back(variable);
                 break;
             default:
-                throw runtime_error("Error parsing custom type: "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+                generateError("Error parsing custom type");
         }
     }
-    expect(KEYWORD_TOKEN, T_SEMICOLON, "Expected ';': "+to_string(currentToken.lineNumber)+" "+to_string(currentToken.linePosition));
+    expect(KEYWORD_TOKEN, T_SEMICOLON, "Expected ';'");
     return typeDefinition;
 }

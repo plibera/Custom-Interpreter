@@ -487,6 +487,26 @@ TEST(InterpreterTest, interpretsCustomFunction5) {
     ASSERT_THROW(interpreter.execute(), std::runtime_error);
 }
 
+TEST(InterpreterTest, voidFunNoReturn) {
+    std::stringstream ss;
+    ss<<"Int b; Void f() { b = 5; } f(); return b;";
+    Interpreter interpreter(ss);    
+    interpreter.execute();
+    long long *value;
+    ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, 5);
+}
+
+TEST(InterpreterTest, voidFunReturn) {
+    std::stringstream ss;
+    ss<<"Int b; Void f() { b = 5; return; b = 6; } f(); return b;";
+    Interpreter interpreter(ss);    
+    interpreter.execute();
+    long long *value;
+    ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, 5);
+}
+
 TEST(InterpreterTest, wrongFunCall) {
     std::stringstream ss;
     ss<<"Int f(Bool a) { if(a) return 5; } return f();";
