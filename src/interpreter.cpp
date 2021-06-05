@@ -91,6 +91,10 @@ std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<BinaryExpression> b
                 }
                 else
                 {
+                    if(!scope.isPublic((*identifier)->object, (*identifier)->identifier))
+                    {
+                        throw runtime_error("Attribute "+(*identifier)->identifier+" of "+(*identifier)->object+" is private "+binaryExpression->pos.toString());
+                    }
                     scope.assignValue((*identifier)->object, (*identifier)->identifier, newValue);
                 }
             }
@@ -110,63 +114,81 @@ std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<BinaryExpression> b
     } 
     try
     {
-        if(binaryExpression->op.type == T_EQ)
+        if(binaryExpression->op.classType == OPERATOR_TOKEN)
         {
-            if(*operatorId == operatorIdMap.at("=="))
+            if(binaryExpression->op.type == T_EQ)
             {
-                return make_shared<Value>(*leftValue == *rightValue);
+                if(*operatorId == operatorIdMap.at("=="))
+                {
+                    return make_shared<Value>(*leftValue == *rightValue);
+                }
+                if(*operatorId == operatorIdMap.at("!="))
+                {
+                    return make_shared<Value>(*leftValue != *rightValue);
+                }
             }
-            if(*operatorId == operatorIdMap.at("!="))
+            else if(binaryExpression->op.type == T_REL)
             {
-                return make_shared<Value>(*leftValue != *rightValue);
+                if(*operatorId == operatorIdMap.at("<"))
+                {
+                    return make_shared<Value>(*leftValue < *rightValue);
+                }
+                if(*operatorId == operatorIdMap.at(">"))
+                {
+                    return make_shared<Value>(*leftValue > *rightValue);
+                }
+                if(*operatorId == operatorIdMap.at("<="))
+                {
+                    return make_shared<Value>(*leftValue <= *rightValue);
+                }
+                if(*operatorId == operatorIdMap.at(">="))
+                {
+                    return make_shared<Value>(*leftValue >= *rightValue);
+                }
+            }
+            else if(binaryExpression->op.type == T_ADD)
+            {
+                if(*operatorId == operatorIdMap.at("+"))
+                {
+                    return make_shared<Value>(*leftValue + *rightValue);
+                }
+                if(*operatorId == operatorIdMap.at("-"))
+                {
+                    return make_shared<Value>(*leftValue - *rightValue);
+                }
+            }
+            else if(binaryExpression->op.type == T_MUL)
+            {
+                if(*operatorId == operatorIdMap.at("*"))
+                {
+                    return make_shared<Value>(*leftValue * *rightValue);
+                }
+                if(*operatorId == operatorIdMap.at("/"))
+                {
+                    return make_shared<Value>(*leftValue / *rightValue);
+                }
+            }
+            else if(binaryExpression->op.type == T_EXP)
+            {
+                if(*operatorId == operatorIdMap.at("**"))
+                {
+                    return make_shared<Value>(*leftValue ^ *rightValue);
+                }
             }
         }
-        else if(binaryExpression->op.type == T_REL)
+        else if(binaryExpression->op.classType == KEYWORD_TOKEN)
         {
-            if(*operatorId == operatorIdMap.at("<"))
+            if(binaryExpression->op.type == T_AND)
             {
-                return make_shared<Value>(*leftValue < *rightValue);
+                return make_shared<Value>(leftValue->logicalValue() && rightValue->logicalValue());
             }
-            if(*operatorId == operatorIdMap.at(">"))
+            else if(binaryExpression->op.type == T_OR)
             {
-                return make_shared<Value>(*leftValue > *rightValue);
+                return make_shared<Value>(leftValue->logicalValue() || rightValue->logicalValue());
             }
-            if(*operatorId == operatorIdMap.at("<="))
+            else if(binaryExpression->op.type == T_NOT)
             {
-                return make_shared<Value>(*leftValue <= *rightValue);
-            }
-            if(*operatorId == operatorIdMap.at(">="))
-            {
-                return make_shared<Value>(*leftValue >= *rightValue);
-            }
-        }
-        else if(binaryExpression->op.type == T_ADD)
-        {
-            if(*operatorId == operatorIdMap.at("+"))
-            {
-                return make_shared<Value>(*leftValue + *rightValue);
-            }
-            if(*operatorId == operatorIdMap.at("-"))
-            {
-                return make_shared<Value>(*leftValue - *rightValue);
-            }
-        }
-        else if(binaryExpression->op.type == T_MUL)
-        {
-            if(*operatorId == operatorIdMap.at("*"))
-            {
-                return make_shared<Value>(*leftValue * *rightValue);
-            }
-            if(*operatorId == operatorIdMap.at("/"))
-            {
-                return make_shared<Value>(*leftValue / *rightValue);
-            }
-        }
-        else if(binaryExpression->op.type == T_EXP)
-        {
-            if(*operatorId == operatorIdMap.at("**"))
-            {
-                return make_shared<Value>(*leftValue ^ *rightValue);
+                return make_shared<Value>(!rightValue->logicalValue());
             }
         }
     }
@@ -240,6 +262,10 @@ std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<FunCall> funCall)
             }
             if(accept)
             {
+                if(funCall->object != "this" && !customTypeObject->isFunctionPublic.at(funCall->identifier))
+                {
+                    throw runtime_error("Function "+funCall->identifier+" of "+funCall->object+" is private "+funCall->pos.toString());
+                }
                 string oldCurrentObject = currentObject;
                 if(funCall->object != "this")
                 {
@@ -346,6 +372,10 @@ std::shared_ptr<Value> Interpreter::evaluate(std::shared_ptr<Identifier> identif
     if(identifier->object == "this")
     {
         return scope.getValue(currentObject, identifier->identifier);    
+    }
+    if(!scope.isPublic(identifier->object, identifier->identifier))
+    {
+        throw runtime_error("Attribute "+identifier->identifier+" of "+identifier->object+" is private "+identifier->pos.toString());
     }
     return scope.getValue(identifier->object, identifier->identifier);
 }
@@ -542,12 +572,13 @@ void Interpreter::evaluate(std::shared_ptr<VariableDeclaration> variableDeclarat
         scope.startTypeDefinition();
         for(auto &attribute : typeDefinition->second->variables)
         {
-            evaluate(attribute);
             isPublic.insert(make_pair(attribute->identifier, attribute->isPublic));
+            evaluate(attribute);
         }
         auto typeAttributes = scope.endTypeDefinition();
 
         FunctionVector typeFunctions;
+        map<string, bool> isFunctionPublic;
 
         for(auto & function : typeDefinition->second->functions)
         {
@@ -559,8 +590,9 @@ void Interpreter::evaluate(std::shared_ptr<VariableDeclaration> variableDeclarat
                 }
             }
             typeFunctions.push_back(make_pair(function, std::bind_front(&Interpreter::evaluateCustomFunction, this)));
+            isFunctionPublic.insert(make_pair(function->identifier, function->isPublic));
         }
-        scope.addVariable(variableDeclaration->identifier, make_shared<Value>(make_shared<CustomType>(typeIdentifier, typeAttributes, isPublic, typeFunctions)));
+        scope.addVariable(variableDeclaration->identifier, make_shared<Value>(make_shared<CustomType>(typeIdentifier, typeAttributes, isPublic, isFunctionPublic, typeFunctions)));
     }
     if(variableDeclaration->expression != nullptr)
     {

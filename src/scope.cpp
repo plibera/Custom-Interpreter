@@ -109,6 +109,28 @@ std::shared_ptr<Value> Scope::getValue(std::string object, std::string identifie
     throw runtime_error("Attribute "+identifier+" does not exist in "+object+" "+ currentPos.toString());
 }
 
+bool Scope::isPublic(std::string &object, std::string &identifier)
+{
+    auto objectValue = getValue(object);
+    shared_ptr<CustomType> customType;
+    if(auto ct = get_if<shared_ptr<CustomType>>(objectValue->value.get()))
+    {
+        customType = *ct;
+    }
+    else
+    {
+        throw runtime_error("Variable is not a custom type "+ currentPos.toString());    
+    }
+    try
+    {
+        return customType->isPublic.at(identifier);
+    }
+    catch(const std::exception& e)
+    {
+        throw runtime_error("Attribute identifier not found in "+object+" "+ currentPos.toString());
+    }
+}
+
 void Scope::assignValue(std::string identifier, std::shared_ptr<Value> value)
 {
     if(value == nullptr || value->value == nullptr)

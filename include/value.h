@@ -24,10 +24,12 @@ struct CustomType
     std::string typeName;
     std::map<std::string, std::shared_ptr<Value>> attributes;
     std::map<std::string, bool> isPublic;
+    std::map<std::string, bool> isFunctionPublic;
     FunctionVector functions;
 
-    CustomType(std::string typeName, std::map<std::string, std::shared_ptr<Value>> attributes, std::map<std::string, bool>, FunctionVector functions)
-        :typeName(typeName), attributes(attributes), isPublic(isPublic), functions(functions) {}
+    CustomType(std::string typeName, std::map<std::string, std::shared_ptr<Value>> attributes, std::map<std::string, bool> isPublic,
+        std::map<std::string, bool> isFunctionPublic, FunctionVector functions)
+        :typeName(typeName), attributes(attributes), isPublic(isPublic), isFunctionPublic(isFunctionPublic), functions(functions) {}
 };
 
 

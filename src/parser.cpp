@@ -131,6 +131,20 @@ std::shared_ptr<Instruction> Parser::parseInstruction()
 
 std::shared_ptr<Expression> Parser::parseExpression()
 {
+    if(accept(KEYWORD_TOKEN, T_NOT))
+    {
+        shared_ptr<BinaryExpression> binaryExpression = make_shared<BinaryExpression>();
+        binaryExpression->lhs = make_shared<Expression>();
+        binaryExpression->lhs->expression = make_shared<Literal>();
+        binaryExpression->op = currentToken;
+        binaryExpression->pos = Position(currentToken);
+        getNextToken();
+        binaryExpression->rhs = parseExpression();
+        shared_ptr<Expression> expression = make_shared<Expression>();
+        expression->expression = binaryExpression;
+        expression->pos = binaryExpression->pos;
+        return expression;
+    }
     return parseAssignExpression();
 }
 

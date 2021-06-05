@@ -29,6 +29,7 @@ struct Scope
     void assignValue(std::string identifier, std::shared_ptr<Value> value);
     void assignValue(std::string object, std::string identifier, std::shared_ptr<Value> value);
     void assignValue(std::shared_ptr<Value> l, std::shared_ptr<Value> r);
+    bool isPublic(std::string &object, std::string &identifier);
     std::shared_ptr<Value> getValue(std::string identifier);
     std::shared_ptr<Value> getValue(std::string object, std::string identifier);
 

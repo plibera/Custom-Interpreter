@@ -114,6 +114,86 @@ TEST(InterpreterTest, interpretsExponent) {
     ASSERT_EQ(*value, 8);
 }
 
+TEST(InterpreterTest, interpretsAnd) {
+    std::stringstream ss;
+    ss<<"return true and false;";
+    Interpreter interpreter(ss);
+    interpreter.execute();
+    bool *value;
+    ASSERT_TRUE(value = std::get_if<bool>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_FALSE(*value);
+}
+
+TEST(InterpreterTest, interpretsOr) {
+    std::stringstream ss;
+    ss<<"return true or false;";
+    Interpreter interpreter(ss);
+    interpreter.execute();
+    bool *value;
+    ASSERT_TRUE(value = std::get_if<bool>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_TRUE(*value);
+}
+
+TEST(InterpreterTest, interpretsNot) {
+    std::stringstream ss;
+    ss<<"return not true;";
+    Interpreter interpreter(ss);
+    interpreter.execute();
+    bool *value;
+    ASSERT_TRUE(value = std::get_if<bool>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_FALSE(*value);
+}
+
+TEST(InterpreterTest, multipleAssignment) {
+    std::stringstream ss;
+    ss<<"Int a; Int b; a=b=5; return a;";
+    Interpreter interpreter(ss);
+    interpreter.execute();
+    long long *value;
+    ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, 5);
+}
+
+TEST(InterpreterTest, properMaths) {
+    std::stringstream ss;
+    ss<<"return 2*(2+2);";
+    Interpreter interpreter(ss);
+    interpreter.execute();
+    long long *value;
+    ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, 8);
+}
+
+TEST(InterpreterTest, properMaths2) {
+    std::stringstream ss;
+    ss<<"return 2*2+2;";
+    Interpreter interpreter(ss);
+    interpreter.execute();
+    long long *value;
+    ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, 6);
+}
+
+TEST(InterpreterTest, properMaths3) {
+    std::stringstream ss;
+    ss<<"return 2/2*2;";
+    Interpreter interpreter(ss);
+    interpreter.execute();
+    long long *value;
+    ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, 2);
+}
+
+TEST(InterpreterTest, properMaths4) {
+    std::stringstream ss;
+    ss<<"return 4**3**2;";
+    Interpreter interpreter(ss);
+    interpreter.execute();
+    long long *value;
+    ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, 262144);
+}
+
 TEST(InterpreterTest, performsAssignment) {
     std::stringstream ss;
     ss<<"Int a = 5; return a;";
@@ -424,6 +504,40 @@ TEST(InterpreterTest, wrongFunCall2) {
 TEST(InterpreterTest, wrongFunCall3) {
     std::stringstream ss;
     ss<<"Int f(Bool a) { if(a) return 5; } return f(true, false);";
+    Interpreter interpreter(ss);    
+    ASSERT_THROW(interpreter.execute(), std::runtime_error);
+}
+
+TEST(InterpreterTest, customTypes) {
+    std::stringstream ss;
+    ss<<"class Type {public Int a;}; Type x; x.a = 5; return x.a;";
+    Interpreter interpreter(ss);    
+    interpreter.execute();
+    long long *value;
+    ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, 5);
+}
+
+TEST(InterpreterTest, customTypes2) {
+    std::stringstream ss;
+    ss<<"class Type {Int a;}; Type x; x.a = 5; return x.a;";
+    Interpreter interpreter(ss);    
+    ASSERT_THROW(interpreter.execute(), std::runtime_error);
+}
+
+TEST(InterpreterTest, customTypes3) {
+    std::stringstream ss;
+    ss<<"class Type {public Int f(){return 5;}}; Type x; return x.f();";
+    Interpreter interpreter(ss);    
+    interpreter.execute();
+    long long *value;
+    ASSERT_TRUE(value = std::get_if<long long>(interpreter.getLastReturnValue().get()->value.get()));
+    ASSERT_EQ(*value, 5);
+}
+
+TEST(InterpreterTest, customTypes4) {
+    std::stringstream ss;
+    ss<<"class Type {Int f(){return 5;}}; Type x; return x.f();";
     Interpreter interpreter(ss);    
     ASSERT_THROW(interpreter.execute(), std::runtime_error);
 }
