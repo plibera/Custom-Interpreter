@@ -233,3 +233,60 @@ TEST(ParserTest, ParsesIfStatement) {
     program2.program.push_back(statement);
     ASSERT_EQ(program->to_string(), program2.to_string());
 }
+
+TEST(ParserTest, missingSemicolon) {
+    std::stringstream ss;
+    ss<<"Int x Int y;";
+    Parser parser(ss);
+    ASSERT_THROW(parser.parse(), std::runtime_error);
+}
+
+TEST(ParserTest, ParenthesesError) {
+    std::stringstream ss;
+    ss<<"((a+b*c)";
+    Parser parser(ss);
+    ASSERT_THROW(parser.parse(), std::runtime_error);
+}
+
+TEST(ParserTest, BracketsError) {
+    std::stringstream ss;
+    ss<<"if(a<b) { print(a);";
+    Parser parser(ss);
+    ASSERT_THROW(parser.parse(), std::runtime_error);
+}
+
+TEST(ParserTest, accessError) {
+    std::stringstream ss;
+    ss<<"x. = 5;";
+    Parser parser(ss);
+    ASSERT_THROW(parser.parse(), std::runtime_error);
+}
+
+TEST(ParserTest, accessError2) {
+    std::stringstream ss;
+    ss<<"x.Y = 5;";
+    Parser parser(ss);
+    ASSERT_THROW(parser.parse(), std::runtime_error);
+}
+
+TEST(ParserTest, commaError) {
+    std::stringstream ss;
+    ss<<"f(x,);";
+    Parser parser(ss);
+    ASSERT_THROW(parser.parse(), std::runtime_error);
+}
+
+TEST(ParserTest, parsesFunctionDeclaration) {
+    std::stringstream ss;
+    ss<<"Void f();";
+    Parser parser(ss);
+    std::shared_ptr<Program> program = parser.parse();
+
+    Program program2;
+    std::shared_ptr<Definition> definition = std::make_shared<Definition>();
+    std::vector<std::shared_ptr<VariableDeclaration>> arguments;
+    std::shared_ptr<FunDefinition> fundefinition = std::make_shared<FunDefinition>(Token(KEYWORD_TOKEN, T_VOID), "f", arguments, nullptr);
+    definition->definition = fundefinition;
+    program2.program.push_back(definition);
+    ASSERT_EQ(program->to_string(), program2.to_string());
+}

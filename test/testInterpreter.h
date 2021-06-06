@@ -561,3 +561,10 @@ TEST(InterpreterTest, customTypes4) {
     Interpreter interpreter(ss);    
     ASSERT_THROW(interpreter.execute(), std::runtime_error);
 }
+
+TEST(InterpreterTest, voidVariable) {
+    std::stringstream ss;
+    ss<<"Void x;";
+    Interpreter interpreter(ss);    
+    ASSERT_THROW(interpreter.execute(), std::runtime_error);
+}

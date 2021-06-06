@@ -48,7 +48,7 @@ class Parser
     std::shared_ptr<WhileStatement> parseWhileStatement();
     std::shared_ptr<ReturnStatement> parseReturnStatement();
 
-    std::shared_ptr<Definition> parseIdentifierOrFunctionDefinition(bool forceIdentifier = false);
+    std::shared_ptr<Definition> parseIdentifierOrFunctionDefinition(bool expectIdentifier = false);
     std::shared_ptr<TypeDefinition> parseTypeDefinition();
 
     Token getNextToken();

@@ -469,7 +469,7 @@ std::shared_ptr<ReturnStatement> Parser::parseReturnStatement()
     return returnStatement;
 }
 
-std::shared_ptr<Definition> Parser::parseIdentifierOrFunctionDefinition(bool forceIdentifier)
+std::shared_ptr<Definition> Parser::parseIdentifierOrFunctionDefinition(bool expectIdentifier)
 {
     if(!(accept(IDENTIFIER_TOKEN, T_TYPE) || accept(KEYWORD_TOKEN, T_INT) || accept(KEYWORD_TOKEN, T_VOID) || 
         accept(KEYWORD_TOKEN, T_FLOAT) || accept(KEYWORD_TOKEN, T_BOOL) || accept(KEYWORD_TOKEN, T_STRING)))
@@ -486,7 +486,7 @@ std::shared_ptr<Definition> Parser::parseIdentifierOrFunctionDefinition(bool for
 
     if(!accept(KEYWORD_TOKEN, T_LEFTPAREN))
     {
-        if(accept(KEYWORD_TOKEN, T_VOID))
+        if(type.classType == KEYWORD_TOKEN && type.type == T_VOID)
             generateError("Identifier of type Void not allowed");
         
         //Parse identifier
@@ -505,7 +505,7 @@ std::shared_ptr<Definition> Parser::parseIdentifierOrFunctionDefinition(bool for
                 generateError("Expected expression after '='");
         }
 
-        if(!forceIdentifier)
+        if(!expectIdentifier)
             expect(KEYWORD_TOKEN, T_SEMICOLON, "Expected ';'");
         shared_ptr<Definition> definition = make_shared<Definition>();
         definition->pos = Position(currentToken);
@@ -513,7 +513,7 @@ std::shared_ptr<Definition> Parser::parseIdentifierOrFunctionDefinition(bool for
         return definition;
     }
 
-    if(forceIdentifier)
+    if(expectIdentifier)
         generateError("Unexpected function declaration");
     
     getNextToken();
